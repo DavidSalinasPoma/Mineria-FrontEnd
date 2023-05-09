@@ -1,0 +1,15 @@
+.with-ancho {
+  width: 90%;
+}
+
+@media (min-width: 992px) {
+  .with-ancho {
+    width: 65%;
+  }
+}
+
+@media (min-width: 1200px) {
+  .with-ancho {
+    width: 35%;
+  }
+}

@@ -1,0 +1,54 @@
+<!-- ============================================================== -->
+<!-- Main wrapper - style you can find in pages.scss -->
+<!-- ============================================================== -->
+<div id="main-wrapper" class="animated fadeIn fast">
+
+  <app-header></app-header>
+
+  <app-sidebar></app-sidebar>
+
+
+  <!-- Page wrapper  -->
+  <div class="page-wrapper">
+    <div class="container-fluid">
+      <!-- Breadcrumbs -->
+      <app-breadcrumbs></app-breadcrumbs>
+
+      <!-- Aqui el sistema de rutas del template -->
+      <!-- ============================================================== -->
+      <!-- Start Page Content -->
+      <!-- ============================================================== -->
+      <div class="row">
+        <div class="col-12">
+          <div class="card">
+            <div class="card-body">
+              <!-- Aqui se estan renderizando las rutas secundarias -->
+              <!-- 
+                dashboard
+                grafica1
+                progress
+               -->
+              <router-outlet></router-outlet>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- ============================================================== -->
+      <!-- End PAge Content -->
+      <!-- ============================================================== -->
+
+      <!-- footer -->
+      <app-footer></app-footer>
+
+
+    </div>
+
+
+  </div>
+  <!-- End Page wrapper  -->
+
+
+</div>
+<!-- ============================================================== -->
+<!-- End Wrapper -->
+<!-- ============================================================== -->

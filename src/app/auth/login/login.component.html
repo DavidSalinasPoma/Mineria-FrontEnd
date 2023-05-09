@@ -1,0 +1,81 @@
+      <!-- ============================================================== -->
+      <!-- Main wrapper - style you can find in pages.scss -->
+      <!-- ============================================================== -->
+
+      <div *ngIf="this.cargando" class="preloader">
+        <div class="loader">
+          <div class="loader__figure"></div>
+          <p class="loader__label">Ingresando al sistema</p>
+        </div>
+      </div>
+
+
+      <!-- ============================================================== -->
+      <!-- Main wrapper - style you can find in pages.scss -->
+      <!-- ============================================================== -->
+      <section id="wrapper" class="animated fadeIn fast">
+        <app-navlogin></app-navlogin>
+        <div class="login-register ">
+
+          <div class="imagen-escudo text-center">
+            <img src="../../../assets/images/estadoPlurinacional.png" width="150" alt="">
+          </div>
+          <div class="login-box card borde-card sombras">
+            <div class="card-body">
+              <form [formGroup]="this.formulario" (ngSubmit)="login()" class="form-horizontal form-material"
+                id="loginform" action="index.html">
+                <h3 class="box-title m-b-20 text-center">INICIAR SESIÓN</h3>
+                <div class="form-group ">
+                  <div class="col-xs-12">
+
+                    <input class="form-control" type="text" required="" placeholder="* Usuario" autocomplete="off"
+                      formControlName="usuario"> </div>
+                  <!-- Validacion -->
+                  <!-- Preguntamos si es invalido y si esta sucio o a sido tocado -->
+                  <div *ngIf="this.usuario?.invalid && (this.usuario?.dirty || this.usuario?.touched)">
+                    <!-- Errores con expresiones regulares -->
+                    <div *ngIf="this.usuario?.hasError('required')" class="animated fadeIn fast text-danger" id="">
+                      El usuario es obligatorio.
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <div class="col-xs-12">
+
+                    <input class="form-control" type="password" required="" placeholder="* Contraseña"
+                      autocomplete="off" formControlName="password">
+                  </div>
+                  <!-- Validacion -->
+                  <!-- Preguntamos si es invalido y si esta sucio o a sido tocado -->
+                  <div *ngIf="this.password?.invalid && (this.password?.dirty || this.password?.touched)">
+                    <!-- Errores con expresiones regulares -->
+                    <div *ngIf="this.password?.hasError('required')" class="animated fadeIn fast text-danger" id="">
+                      La contraseña es obligatoria
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <div class="col-md-12">
+                    <div class="checkbox checkbox-info pull-left p-t-0">
+                      <input id="checkbox-signup" type="checkbox" class="filled-in chk-col-light-blue"
+                        formControlName="remember">
+                      <label for="checkbox-signup"> Recuerdame </label>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group text-center">
+                  <div class="col-xs-12 p-b-20">
+                    <button class="btn btn-block btn-lg btn-primary " type="submit"
+                      [disabled]="this.formulario.invalid">INGRESAR</button>
+                  </div>
+                  <span>GOBIERNO AUTÓNOMO DEPARTAMENTAL DE COCHABAMBA</span>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================== -->
+      <!-- End Wrapper -->
+      <!-- ============================================================== -->

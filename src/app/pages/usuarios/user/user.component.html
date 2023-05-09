@@ -1,0 +1,73 @@
+<div class="row">
+  <div class="col-12">
+    <div class="card">
+      <div class="card-body">
+
+        <div class="d-flex justify-content-between">
+          <div class="titulos-tabla">
+            <h4 class="card-title">Lista de usuarios</h4>
+            <h6 class="card-subtitle">Sistema de plantillas con QR</h6>
+          </div>
+          <!-- btn-crear-nuevos-usuarios -->
+          <div class="btn-crear-usuario mb-2 mb-lg-0">
+            <button type="button" class="btn btn-primary" (click)="abrirModal()"><i class=" fa fa-user-plus"></i> Crear
+              usuario</button>
+          </div>
+        </div>
+
+        <!-- Tabla de datos -->
+        <div class="table-responsive">
+          <table class="table color-bordered-table inverse-bordered-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Nombre completo</th>
+                <th>Usuario</th>
+                <th>Estado</th>
+                <th>Rol</th>
+                <th>Descripción</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>1</td>
+                <td>Nigam</td>
+                <td>Eichmann</td>
+                <td>Eichmann</td>
+                <td>Eichmann</td>
+                <td>Eichmann</td>
+                <td>@Sonu</td>
+              </tr>
+              <tr>
+                <td>1</td>
+                <td>Nigam</td>
+                <td>Eichmann</td>
+                <td>Eichmann</td>
+                <td>Eichmann</td>
+                <td>Eichmann</td>
+                <td>@Sonu</td>
+              </tr>
+              <tr>
+                <td>1</td>
+                <td>Nigam</td>
+                <td>Eichmann</td>
+                <td>Eichmann</td>
+                <td>Eichmann</td>
+                <td>Eichmann</td>
+                <td>@Sonu</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Modal Registro de usuarios -->
+<app-modalusuarioregister *ngIf="mostrarModal" [titulo]="'Mi título'" [mensaje]="'Mi mensaje'"
+  (cerrarModal)="cerrarModal()">
+</app-modalusuarioregister>
+<!-- Fin modal registro de usuarios -->
