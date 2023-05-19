@@ -3,21 +3,22 @@
     <div class="card">
       <div class="card-body">
 
-        <div class="d-flex justify-content-between">
+        <div class="d-flex justify-content-between animated fadeIn fast">
           <div class="titulos-tabla">
             <h4 class="card-title">Lista de usuarios</h4>
             <h6 class="card-subtitle">Sistema de plantillas con QR</h6>
           </div>
           <!-- btn-crear-nuevos-usuarios -->
           <div class="btn-crear-usuario mb-2 mb-lg-0">
-            <button type="button" class="btn btn-primary" (click)="abrirModal()"><i class=" fa fa-user-plus"></i> Crear
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal_crear_usuario"
+              (click)="this.borrarFormulario(formDirective)"><i class=" fa fa-user-plus"></i> Crear
               usuario</button>
           </div>
         </div>
 
         <!-- Tabla de datos -->
         <div class="table-responsive">
-          <table class="table color-bordered-table inverse-bordered-table">
+          <table class="table color-bordered-table inverse-bordered-table tabla-datos">
             <thead>
               <tr>
                 <th>#</th>
@@ -60,14 +61,129 @@
             </tbody>
           </table>
         </div>
+
+        <div class="table-responsive">
+
+        </div>
       </div>
     </div>
   </div>
 </div>
 
+<!-- Modal crear usuarios -->
+<div class="card">
+  <div class="card-body">
+    <!-- sample modal content -->
+    <div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" style="display: none;"
+      aria-hidden="true" id="myModal_crear_usuario">
+      <form #formDirective="ngForm" [formGroup]="this.formulario" class="ps-4 pt-4 pe-4 pb-0" (ngSubmit)="submit()">
+        <div class="modal-dialog modal-xl">
+          <div class="modal-content">
+            <div class="modal-header bg-info">
+              <h4 class="modal-title text-white text-uppercase" id="myLargeModalLabel">Formulario de registro de nuevos
+                usuarios</h4>
+              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            </div>
+            <div class="modal-body">
+              <h4 class="mb-4">Gestión cuentas de usuario</h4>
+              <div class="row">
+                <div class="col-12 col-lg-6">
 
-<!-- Modal Registro de usuarios -->
-<app-modalusuarioregister *ngIf="mostrarModal" [titulo]="'Mi título'" [mensaje]="'Mi mensaje'"
-  (cerrarModal)="cerrarModal()">
-</app-modalusuarioregister>
-<!-- Fin modal registro de usuarios -->
+                  <!-- Tipo usuario -->
+                  <p class="mb-1">Seleccione un tipo de usuario:<span class="text-danger">*</span></p>
+                  <mat-form-field class="example-full-width" appearance="outline">
+                    <mat-label>Selecionar</mat-label>
+                    <mat-select formControlName="selectUsuario">
+                      <mat-option *ngFor="let tipoUsuario of this.tipoUsuario" [value]="tipoUsuario.value">
+                        {{tipoUsuario.viewValue}}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+
+                  <!-- Nombre de usuario -->
+                  <p class="mb-1">Seleccione un tipo de usuario:<span class="text-danger">*</span></p>
+                  <mat-form-field class="example-full-width" appearance="outline">
+                    <mat-label>Selecionar</mat-label>
+                    <mat-select formControlName="nombreUsuario">
+                      <mat-option *ngFor="let tipoUsuario of this.tipoUsuario" [value]="tipoUsuario.value">
+                        {{tipoUsuario.viewValue}}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+
+                  <!-- Usuario -->
+                  <p class="mb-0">Usuario:<span class="text-danger">*</span></p>
+                  <mat-form-field class="example-full-width" appearance="outline">
+
+                    <input type="text" matInput formControlName="nuevoUsuario" autocomplete="off" spellcheck="false"
+                      placeholder="Ingrese un nombre de usuario">
+
+                    <!-- Validacion -->
+                    <!-- Preguntamos si es invalido y si esta sucio o a sido tocado -->
+                    <mat-hint
+                      *ngIf="this.nuevoUsuario?.invalid && (this.nuevoUsuario?.dirty || this.nuevoUsuario?.touched)">
+                      <!-- Errores con expresiones regulares -->
+                      <div *ngIf="this.nuevoUsuario?.hasError('required')" class="animated fadeIn fast text-danger"
+                        id="">
+                        Este campo es requerido.
+                      </div>
+
+                    </mat-hint>
+                  </mat-form-field>
+
+                  <!-- Contraseña -->
+                  <p class="mb-0">Contraseña:<span class="text-danger">*</span></p>
+                  <mat-form-field class="example-full-width" appearance="outline">
+
+                    <input type="text" matInput formControlName="password" autocomplete="off" spellcheck="false"
+                      placeholder="Ingrese su contraseña actual">
+
+                    <!-- Validacion -->
+                    <!-- Preguntamos si es invalido y si esta sucio o a sido tocado -->
+                    <mat-hint *ngIf="this.password?.invalid && (this.password?.dirty || this.password?.touched)">
+                      <!-- Errores con expresiones regulares -->
+                      <div *ngIf="this.password?.hasError('required')" class="animated fadeIn fast text-danger" id="">
+                        Este campo es requerido.
+                      </div>
+
+                    </mat-hint>
+                  </mat-form-field>
+                </div>
+
+                <!-- Rol de usuario -->
+                <div class="col-12 col-lg-6">
+                  <p class="mb-0">Seleccione un rol de usuario:<span class="text-danger">*</span></p>
+                  <mat-radio-group aria-labelledby="example-radio-group-label" class="example-radio-group"
+                    formControlName="rolUsuario">
+                    <mat-radio-button class="example-radio-button" *ngFor="let season of seasons" [value]="season">
+                      {{season}}
+                    </mat-radio-button>
+                  </mat-radio-group>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-danger waves-effect text-left" data-dismiss="modal">Cancelar</button>
+              <div *ngIf="this.btnSave; else notBtnSave" class="">
+                <button type="submit" class="ms-2 btn btn-primary waves-effect" [disabled]="this.formulario.invalid">
+                  Guardar
+                </button>
+              </div>
+
+              <ng-template #notBtnSave>
+                <button type="submit" class="ms-2 btn btn-primary waves-effect" [disabled]="this.notBtnSave">
+                  <mat-spinner diameter="20"></mat-spinner>
+                  <span class="ms-2">Guardando</span>
+                </button>
+              </ng-template>
+            </div>
+          </div>
+          <!-- /.modal-content -->
+        </div>
+      </form>
+      <!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal -->
+  </div>
+</div>
+<!-- Fin Modal crear usuarios -->

@@ -76,7 +76,20 @@ export class LoginComponent implements OnInit {
             localStorage.removeItem('usuario');
           }
 
-          this.toastr.success(`${resp.identity.nombres} ${resp.identity.apellidos}`, 'Bienvenid@');
+
+          Swal.fire({
+            position: 'center',
+            icon: 'success',
+            title: 'Bienvenid@',
+            text: `${resp.identity.nombres} ${resp.identity.apellidos}`,
+            showConfirmButton: false,
+            timer: 1500
+          })
+          // this.toastr.success(`${resp.identity.nombres} ${resp.identity.apellidos}`, 'Bienvenid@', {
+          //   positionClass: "toast-top-center",
+          //   easeTime: 300,
+          //   timeOut: 2000,
+          // });
 
         } else {
           Swal.fire({

@@ -1,0 +1,603 @@
+<div class="row">
+  <div class="col-12">
+    <div class="card">
+      <div class="card-body">
+
+        <div class="d-flex justify-content-between animated fadeIn fast">
+          <div class="titulos-tabla">
+            <h4 class="card-title">Lista de servidores publicos</h4>
+            <h6 class="card-subtitle">Sistema de control y fiscalización</h6>
+          </div>
+          <!-- btn-crear-nuevos-usuarios -->
+          <div class="btn-crear-usuario mb-2 mb-lg-0">
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal_crear_usuario"
+              (click)="this.borrarFormulario(formDirective)"><i class=" fa fa-user-plus"></i> Crear servidor
+              publico</button>
+          </div>
+        </div>
+
+        <!-- Buscar -->
+        <mat-form-field class="example-full-width mt-3">
+          <mat-label>Buscar</mat-label>
+          <input type="text" matInput placeholder="Ingrese su busqueda">
+          <mat-icon matSuffix>search</mat-icon>
+        </mat-form-field>
+
+
+        <!-- Table Material -->
+        <table mat-table [dataSource]="dataSource" matSort (matSortChange)="announceSortChange($event)"
+          class="mat-elevation-z8">
+
+          <!-- Codigo -->
+          <ng-container matColumnDef="codigo">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by codigo">
+              Codigo
+            </th>
+            <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+          </ng-container>
+
+          <!-- Nombre completo -->
+          <ng-container matColumnDef="nombres">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by nombres">
+              Nombre completo
+            </th>
+            <td mat-cell *matCellDef="let element"> {{element.nombres}} {{ element.paterno }} {{ element.materno }}</td>
+          </ng-container>
+
+          <!-- Carnet -->
+          <ng-container matColumnDef="carnet">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by carnet">
+              Carnet
+            </th>
+            <td mat-cell *matCellDef="let element"> {{element.carnet}} </td>
+          </ng-container>
+
+          <!-- Telefono -->
+          <ng-container matColumnDef="telefono">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by telefono">
+              telefono
+            </th>
+            <td mat-cell *matCellDef="let element"> {{element.telefono}} </td>
+          </ng-container>
+
+          <!-- Email -->
+          <ng-container matColumnDef="email">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by email">
+              Email
+            </th>
+            <td mat-cell *matCellDef="let element"> {{element.email}} </td>
+          </ng-container>
+
+          <!-- Direccion -->
+          <ng-container matColumnDef="direccion">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by direccion">
+              Direccion
+            </th>
+            <td mat-cell *matCellDef="let element"> {{element.direccion}} </td>
+          </ng-container>
+
+          <!-- Estado -->
+          <ng-container matColumnDef="estado">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by estado">
+              Estado
+            </th>
+            <td mat-cell *matCellDef="let element">
+              <span *ngIf="element.estado === 'habilitado'; else notHabilitado"
+                class="p-1 bg-success text-white border rounded">{{element.estado}}</span>
+              <ng-template #notHabilitado>
+                <span class="p-1 bg-danger text-white border rounded">{{element.estado}}</span>
+              </ng-template>
+            </td>
+
+          </ng-container>
+
+          <!-- Acciones -->
+          <ng-container matColumnDef="acciones">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by acciones">
+              Acciones
+            </th>
+            <td mat-cell *matCellDef="let element" class="p-2">
+
+              <a class="text-warning btn-margen" mat-icon-button matTooltip="Editar datos" matTooltipPosition="left"
+                (click)="this.modificarServidoresPublicos(element.id)">
+                <mat-icon>edit</mat-icon>
+              </a>
+
+              <a class="text-danger" mat-icon-button matTooltip="Dar de baja" matTooltipPosition="right">
+                <mat-icon>delete_outline</mat-icon>
+              </a>
+
+            </td>
+          </ng-container>
+
+
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns" class="table-header"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+        <!-- FIN Table Material -->
+
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<!-- Modal crear usuarios -->
+<div class="card">
+  <div class="card-body">
+    <!-- sample modal content -->
+    <div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" style="display: none;"
+      aria-hidden="true" id="myModal_crear_usuario">
+      <form #formDirective="ngForm" [formGroup]="this.formulario" class="ps-4 pt-4 pe-4 pb-0" (ngSubmit)="submit()">
+        <div class="modal-dialog modal-xl">
+          <div class="modal-content">
+            <div class="modal-header bg-primary">
+              <h4 class="modal-title text-white text-uppercase" id="myLargeModalLabel">Formulario de registro de
+                servidores publicos</h4>
+              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            </div>
+            <div class="modal-body">
+              <h4 class="mb-4">Registro de servidores publicos</h4>
+              <!-- Seccion 1 -->
+              <div class="row">
+                <!-- Nombres -->
+                <div class="col-12 col-lg-4">
+                  <p class="mb-0">Nombre completo:<span class="text-danger">*</span></p>
+                  <mat-form-field class="example-full-width" appearance="outline">
+
+                    <input type="text" matInput formControlName="nombres" autocomplete="off" spellcheck="false"
+                      placeholder="Ingrese nombre del servidor publico">
+
+                    <!-- Validacion -->
+                    <!-- Preguntamos si es invalido y si esta sucio o a sido tocado -->
+                    <mat-hint *ngIf="this.nombres?.invalid && (this.nombres?.dirty || this.nombres?.touched)">
+                      <!-- Errores con expresiones regulares -->
+                      <div *ngIf="this.nombres?.hasError('required')" class="animated fadeIn fast text-danger" id="">
+                        Este campo es requerido.
+                      </div>
+                      <div *ngIf="this.nombres?.hasError('pattern')" class="animated fadeIn fast text-danger" id="">
+                        Este campo solo acepta letras.
+                      </div>
+                      <div *ngIf="this.nombres?.hasError('maxlength')" class="animated fadeIn fast text-danger" id="">
+                        Este campo solo acepta solo 50 letras.
+                      </div>
+                    </mat-hint>
+                  </mat-form-field>
+                </div>
+
+                <!-- Paterno -->
+                <div class="col-12 col-lg-4">
+                  <p class="mb-0">Apellido paterno:<span class="text-danger">*</span></p>
+                  <mat-form-field class="example-full-width" appearance="outline">
+
+                    <input type="text" matInput formControlName="paterno" autocomplete="off" spellcheck="false"
+                      placeholder="Ingrese el apellido paterno del servidor publico">
+
+                    <!-- Validacion -->
+                    <!-- Preguntamos si es invalido y si esta sucio o a sido tocado -->
+                    <!-- Validacion -->
+                    <!-- Preguntamos si es invalido y si esta sucio o a sido tocado -->
+                    <mat-hint *ngIf="this.paterno?.invalid && (this.paterno?.dirty || this.paterno?.touched)">
+                      <!-- Errores con expresiones regulares -->
+                      <div *ngIf="this.paterno?.hasError('required')" class="animated fadeIn fast text-danger" id="">
+                        Este campo es requerido.
+                      </div>
+                      <div *ngIf="this.paterno?.hasError('pattern')" class="animated fadeIn fast text-danger" id="">
+                        Este campo solo acepta letras.
+                      </div>
+                      <div *ngIf="this.paterno?.hasError('maxlength')" class="animated fadeIn fast text-danger" id="">
+                        Este campo solo acepta solo 50 letras.
+                      </div>
+                    </mat-hint>
+                  </mat-form-field>
+                </div>
+
+
+                <!-- Materno -->
+                <div class="col-12 col-lg-4">
+                  <p class="mb-0">Apellido materno:<span class="text-danger">*</span></p>
+                  <mat-form-field class="example-full-width" appearance="outline">
+
+                    <input type="text" matInput formControlName="materno" autocomplete="off" spellcheck="false"
+                      placeholder="Ingrese el apellido materno del servidor publico">
+
+                    <!-- Validacion -->
+                    <!-- Preguntamos si es invalido y si esta sucio o a sido tocado -->
+                    <!-- Validacion -->
+                    <!-- Preguntamos si es invalido y si esta sucio o a sido tocado -->
+                    <mat-hint *ngIf="this.materno?.invalid && (this.materno?.dirty || this.materno?.touched)">
+                      <!-- Errores con expresiones regulares -->
+                      <div *ngIf="this.materno?.hasError('required')" class="animated fadeIn fast text-danger" id="">
+                        Este campo es requerido.
+                      </div>
+                      <div *ngIf="this.materno?.hasError('pattern')" class="animated fadeIn fast text-danger" id="">
+                        Este campo solo acepta letras.
+                      </div>
+                      <div *ngIf="this.materno?.hasError('maxlength')" class="animated fadeIn fast text-danger" id="">
+                        Este campo solo acepta solo 50 letras.
+                      </div>
+                    </mat-hint>
+                  </mat-form-field>
+                </div>
+              </div>
+              <!-- Seccion 2 -->
+              <div class="row">
+                <!-- Carnet -->
+                <div class="col-12 col-lg-4">
+                  <p class="mb-0">Carnet:<span class="text-danger">*</span></p>
+                  <mat-form-field class="example-full-width" appearance="outline">
+
+                    <input type="text" matInput formControlName="carnet" autocomplete="off" spellcheck="false"
+                      placeholder="Ingrese carnet de indentidad">
+
+                    <!-- Validacion -->
+                    <!-- Preguntamos si es invalido y si esta sucio o a sido tocado -->
+                    <mat-hint *ngIf="this.carnet?.invalid && (this.carnet?.dirty || this.carnet?.touched)">
+                      <!-- Errores con expresiones regulares -->
+                      <div *ngIf="this.carnet?.hasError('required')" class="animated fadeIn fast text-danger" id="">
+                        Este campo es requerido.
+                      </div>
+                      <div *ngIf="this.carnet?.hasError('maxlength')" class="animated fadeIn fast text-danger" id="">
+                        Este campo solo acepta solo 12 digitos.
+                      </div>
+                    </mat-hint>
+                  </mat-form-field>
+                </div>
+
+                <!-- Telefono -->
+                <div class="col-12 col-lg-4">
+                  <p class="mb-0">Telefono:<span class="text-danger">*</span></p>
+                  <mat-form-field class="example-full-width" appearance="outline">
+
+                    <input type="text" matInput formControlName="telefono" autocomplete="off" spellcheck="false"
+                      placeholder="Ingrese telefono del servidor publico">
+
+                    <!-- Validacion -->
+                    <!-- Preguntamos si es invalido y si esta sucio o a sido tocado -->
+                    <mat-hint *ngIf="this.telefono?.invalid && (this.telefono?.dirty || this.telefono?.touched)">
+                      <!-- Errores con expresiones regulares -->
+                      <div *ngIf="this.telefono?.hasError('required')" class="animated fadeIn fast text-danger" id="">
+                        Este campo es requerido.
+                      </div>
+                      <div *ngIf="this.telefono?.hasError('pattern')" class="animated fadeIn fast text-danger" id="">
+                        Este campo solo acepta números.
+                      </div>
+
+                      <div *ngIf="this.telefono?.hasError('maxlength')" class="animated fadeIn fast text-danger" id="">
+                        Este campo solo acepta solo 10 digitos.
+                      </div>
+
+                    </mat-hint>
+                  </mat-form-field>
+                </div>
+
+                <!-- Email -->
+                <div class="col-12 col-lg-4">
+                  <p class="mb-0">Email:<span class="text-danger">*</span></p>
+                  <mat-form-field class="example-full-width" appearance="outline">
+
+                    <input type="text" matInput formControlName="email" autocomplete="off" spellcheck="false"
+                      placeholder="Ingrese el email del servidor publico">
+
+                    <!-- Validacion -->
+                    <!-- Preguntamos si es invalido y si esta sucio o a sido tocado -->
+                    <mat-hint *ngIf="this.email?.invalid && (this.email?.dirty || this.email?.touched)">
+                      <!-- Errores con expresiones regulares -->
+                      <div *ngIf="this.email?.hasError('required')" class="animated fadeIn fast text-danger" id="">
+                        Este campo es requerido.
+                      </div>
+
+                      <div *ngIf="this.email?.hasError('email')" class="animated fadeIn fast text-danger" id="">
+                        Formato de correo electronico invalido.
+                      </div>
+
+                      <div *ngIf="this.email?.hasError('maxlength')" class="animated fadeIn fast text-danger" id="">
+                        Este campo solo acepta solo 50 letras.
+                      </div>
+
+                    </mat-hint>
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <!-- Seccion 3 -->
+              <div class="row">
+                <!-- Dirección -->
+                <div class="col-12">
+                  <p class="mb-0">Dirección:<span class="text-danger">*</span></p>
+                  <mat-form-field class="example-full-width" appearance="outline">
+
+                    <input type="text" matInput formControlName="direccion" autocomplete="off" spellcheck="false"
+                      placeholder="Ingrese la direccion del servidor publico">
+
+                    <!-- Validacion -->
+                    <!-- Preguntamos si es invalido y si esta sucio o a sido tocado -->
+                    <mat-hint *ngIf="this.direccion?.invalid && (this.direccion?.dirty || this.direccion?.touched)">
+                      <!-- Errores con expresiones regulares -->
+                      <div *ngIf="this.direccion?.hasError('required')" class="animated fadeIn fast text-danger" id="">
+                        Este campo es requerido.
+                      </div>
+
+                    </mat-hint>
+                  </mat-form-field>
+                </div>
+
+              </div>
+              <p class="text-right mt-3">Los campos con ( <span class="text-danger">*</span> ) son obligatorios</p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-danger waves-effect text-left" data-dismiss="modal">Cancelar</button>
+              <div *ngIf="this.btnSave; else notBtnSave" class="">
+                <button type="submit" class="ms-2 btn btn-primary waves-effect" [disabled]="this.formulario.invalid">
+                  Guardar
+                </button>
+              </div>
+
+              <ng-template #notBtnSave>
+                <button type="submit" class="ms-2 btn btn-primary waves-effect" [disabled]="this.notBtnSave">
+                  <mat-spinner diameter="20"></mat-spinner>
+                  <span class="ms-2">Guardando</span>
+                </button>
+              </ng-template>
+            </div>
+          </div>
+          <!-- /.modal-content -->
+        </div>
+      </form>
+      <!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal -->
+  </div>
+</div>
+<!-- Fin Modal crear usuarios -->
+
+<!-- Modal editar usuarios -->
+<div class="card">
+  <div class="card-body">
+    <!-- sample modal content -->
+    <div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" style="display: none;"
+      aria-hidden="true" id="myModal_editar_servidor">
+      <form #formDirective="ngForm" [formGroup]="this.formularioModificar" class="ps-4 pt-4 pe-4 pb-0"
+        (ngSubmit)="submitModificar()">
+        <div class="modal-dialog modal-xl">
+          <div class="modal-content">
+            <div class="modal-header bg-danger">
+              <h4 class="modal-title text-white text-uppercase" id="myLargeModalLabel">Formulario de registro de
+                servidores publicos</h4>
+              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            </div>
+            <div class="modal-body">
+              <h4 class="mb-4">Modificar datos</h4>
+              <!-- Seccion 1 -->
+              <div class="row">
+                <!-- Nombres -->
+                <div class="col-12 col-lg-4">
+                  <p class="mb-0">Nombre completo:<span class="text-danger">*</span></p>
+                  <mat-form-field class="example-full-width" appearance="outline">
+
+                    <input type="text" matInput formControlName="nombresM" autocomplete="off" spellcheck="false"
+                      placeholder="Ingrese nombre del servidor publico">
+
+                    <!-- Validacion -->
+                    <!-- Preguntamos si es invalido y si esta sucio o a sido tocado -->
+                    <mat-hint *ngIf="this.nombresM?.invalid && (this.nombresM?.dirty || this.nombresM?.touched)">
+                      <!-- Errores con expresiones regulares -->
+                      <div *ngIf="this.nombresM?.hasError('required')" class="animated fadeIn fast text-danger" id="">
+                        Este campo es requerido.
+                      </div>
+                      <div *ngIf="this.nombresM?.hasError('pattern')" class="animated fadeIn fast text-danger" id="">
+                        Este campo solo acepta letras.
+                      </div>
+                      <div *ngIf="this.nombresM?.hasError('maxlength')" class="animated fadeIn fast text-danger" id="">
+                        Este campo solo acepta solo 50 letras.
+                      </div>
+                    </mat-hint>
+                  </mat-form-field>
+                </div>
+
+                <!-- Paterno -->
+                <div class="col-12 col-lg-4">
+                  <p class="mb-0">Apellido paterno:<span class="text-danger">*</span></p>
+                  <mat-form-field class="example-full-width" appearance="outline">
+
+                    <input type="text" matInput formControlName="paternoM" autocomplete="off" spellcheck="false"
+                      placeholder="Ingrese el apellido paterno">
+
+                    <!-- Validacion -->
+                    <!-- Preguntamos si es invalido y si esta sucio o a sido tocado -->
+                    <!-- Validacion -->
+                    <!-- Preguntamos si es invalido y si esta sucio o a sido tocado -->
+                    <mat-hint *ngIf="this.paternoM?.invalid && (this.paternoM?.dirty || this.paternoM?.touched)">
+                      <!-- Errores con expresiones regulares -->
+                      <div *ngIf="this.paternoM?.hasError('required')" class="animated fadeIn fast text-danger" id="">
+                        Este campo es requerido.
+                      </div>
+                      <div *ngIf="this.paternoM?.hasError('pattern')" class="animated fadeIn fast text-danger" id="">
+                        Este campo solo acepta letras.
+                      </div>
+                      <div *ngIf="this.paternoM?.hasError('maxlength')" class="animated fadeIn fast text-danger" id="">
+                        Este campo solo acepta solo 50 letras.
+                      </div>
+                    </mat-hint>
+                  </mat-form-field>
+                </div>
+
+
+                <!-- Materno -->
+                <div class="col-12 col-lg-4">
+                  <p class="mb-0">Apellido materno:<span class="text-danger">*</span></p>
+                  <mat-form-field class="example-full-width" appearance="outline">
+
+                    <input type="text" matInput formControlName="maternoM" autocomplete="off" spellcheck="false"
+                      placeholder="Ingrese el apellido materno">
+
+                    <!-- Validacion -->
+                    <mat-hint *ngIf="this.maternoM?.invalid && (this.maternoM?.dirty || this.maternoM?.touched)">
+                      <!-- Errores con expresiones regulares -->
+                      <div *ngIf="this.maternoM?.hasError('required')" class="animated fadeIn fast text-danger" id="">
+                        Este campo es requerido.
+                      </div>
+                      <div *ngIf="this.maternoM?.hasError('pattern')" class="animated fadeIn fast text-danger" id="">
+                        Este campo solo acepta letras.
+                      </div>
+                      <div *ngIf="this.maternoM?.hasError('maxlength')" class="animated fadeIn fast text-danger" id="">
+                        Este campo solo acepta solo 50 letras.
+                      </div>
+                    </mat-hint>
+                  </mat-form-field>
+                </div>
+              </div>
+              <!-- Seccion 2 -->
+              <div class="row">
+                <!-- Carnet -->
+                <div class="col-12 col-lg-4">
+                  <p class="mb-0">Carnet:<span class="text-danger">*</span></p>
+                  <mat-form-field class="example-full-width" appearance="outline">
+
+                    <input type="text" matInput formControlName="carnetM" autocomplete="off" spellcheck="false"
+                      placeholder="Ingrese carnet de indentidad">
+
+                    <!-- Validacion -->
+                    <!-- Preguntamos si es invalido y si esta sucio o a sido tocado -->
+                    <mat-hint *ngIf="this.carnetM?.invalid && (this.carnetM?.dirty || this.carnetM?.touched)">
+                      <!-- Errores con expresiones regulares -->
+                      <div *ngIf="this.carnetM?.hasError('required')" class="animated fadeIn fast text-danger" id="">
+                        Este campo es requerido.
+                      </div>
+                      <div *ngIf="this.carnetM?.hasError('maxlength')" class="animated fadeIn fast text-danger" id="">
+                        Este campo solo acepta solo 12 digitos.
+                      </div>
+                    </mat-hint>
+                  </mat-form-field>
+                </div>
+
+                <!-- Telefono -->
+                <div class="col-12 col-lg-4">
+                  <p class="mb-0">Telefono:<span class="text-danger">*</span></p>
+                  <mat-form-field class="example-full-width" appearance="outline">
+
+                    <input type="text" matInput formControlName="telefonoM" autocomplete="off" spellcheck="false"
+                      placeholder="Ingrese telefono del servidor publico">
+
+                    <!-- Validacion -->
+                    <!-- Preguntamos si es invalido y si esta sucio o a sido tocado -->
+                    <mat-hint *ngIf="this.telefonoM?.invalid && (this.telefonoM?.dirty || this.telefonoM?.touched)">
+                      <!-- Errores con expresiones regulares -->
+                      <div *ngIf="this.telefonoM?.hasError('required')" class="animated fadeIn fast text-danger" id="">
+                        Este campo es requerido.
+                      </div>
+                      <div *ngIf="this.telefonoM?.hasError('pattern')" class="animated fadeIn fast text-danger" id="">
+                        Este campo solo acepta números.
+                      </div>
+
+                      <div *ngIf="this.telefonoM?.hasError('maxlength')" class="animated fadeIn fast text-danger" id="">
+                        Este campo solo acepta solo 10 digitos.
+                      </div>
+
+                    </mat-hint>
+                  </mat-form-field>
+                </div>
+
+                <!-- Email -->
+                <div class="col-12 col-lg-4">
+                  <p class="mb-0">Email:<span class="text-danger">*</span></p>
+                  <mat-form-field class="example-full-width" appearance="outline">
+
+                    <input type="text" matInput formControlName="emailM" autocomplete="off" spellcheck="false"
+                      placeholder="Ingrese el email del servidor publico">
+
+                    <!-- Validacion -->
+                    <!-- Preguntamos si es invalido y si esta sucio o a sido tocado -->
+                    <mat-hint *ngIf="this.emailM?.invalid && (this.emailM?.dirty || this.emailM?.touched)">
+                      <!-- Errores con expresiones regulares -->
+                      <div *ngIf="this.emailM?.hasError('required')" class="animated fadeIn fast text-danger" id="">
+                        Este campo es requerido.
+                      </div>
+
+                      <div *ngIf="this.emailM?.hasError('email')" class="animated fadeIn fast text-danger" id="">
+                        Formato de correo electronico invalido.
+                      </div>
+
+                      <div *ngIf="this.emailM?.hasError('maxlength')" class="animated fadeIn fast text-danger" id="">
+                        Este campo solo acepta solo 50 letras.
+                      </div>
+
+                    </mat-hint>
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <!-- Seccion 3 -->
+              <div class="row">
+                <!-- Dirección -->
+                <div class="col-12 col-md-8">
+                  <p class="mb-0">Dirección:<span class="text-danger">*</span></p>
+                  <mat-form-field class="example-full-width" appearance="outline">
+
+                    <input type="text" matInput formControlName="direccionM" autocomplete="off" spellcheck="false"
+                      placeholder="Ingrese la direccion del servidor publico">
+
+                    <!-- Validacion -->
+                    <!-- Preguntamos si es invalido y si esta sucio o a sido tocado -->
+                    <mat-hint *ngIf="this.direccionM?.invalid && (this.direccionM?.dirty || this.direccionM?.touched)">
+                      <!-- Errores con expresiones regulares -->
+                      <div *ngIf="this.direccionM?.hasError('required')" class="animated fadeIn fast text-danger" id="">
+                        Este campo es requerido.
+                      </div>
+
+                    </mat-hint>
+                  </mat-form-field>
+                </div>
+
+                <!-- Estado -->
+                <div class="col-12 col-md-4">
+                  <p class="example-margin mb-0">Estado:<span class="text-danger">*</span></p>
+                  <mat-form-field appearance="outline" class="example-full-width">
+                    <!-- <mat-label>Estado</mat-label> -->
+                    <mat-select formControlName="estadoM">
+                      <mat-option *ngFor="let estado of this.estados" [value]="estado.value">
+                        {{estado.estado}}
+                      </mat-option>
+                    </mat-select>
+                    <!-- Validacion -->
+                    <!-- Preguntamos si es invalido y si esta sucio o a sido tocado -->
+                    <mat-hint *ngIf="this.estadoM?.invalid && (this.estadoM?.dirty || this.estadoM?.touched)">
+                      <!-- Errores con expresiones regulares -->
+                      <div *ngIf="this.estadoM?.hasError('required')" class="animated fadeIn fast text-danger" id="">
+                        Este campo es requerido.
+                      </div>
+                    </mat-hint>
+                  </mat-form-field>
+                </div>
+
+              </div>
+              <p class="text-right mt-3">Los campos con ( <span class="text-danger">*</span> ) son obligatorios</p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-danger waves-effect text-left" data-dismiss="modal">Cancelar</button>
+              <div *ngIf="this.btnSave; else notBtnSave" class="">
+                <button type="submit" class="ms-2 btn btn-primary waves-effect"
+                  [disabled]="this.formularioModificar.invalid">
+                  Guardar
+                </button>
+              </div>
+
+              <ng-template #notBtnSave>
+                <button type="submit" class="ms-2 btn btn-primary waves-effect" [disabled]="this.notBtnSave">
+                  <mat-spinner diameter="20"></mat-spinner>
+                  <span class="ms-2">Guardando</span>
+                </button>
+              </ng-template>
+            </div>
+          </div>
+          <!-- /.modal-content -->
+        </div>
+      </form>
+      <!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal -->
+  </div>
+</div>
+<!-- Fin modal editar usuarios -->

@@ -6,7 +6,7 @@
 </div>
 
 <div class="row justify-content-center animated fadeIn fast">
-  <div class="col-lg-6 col-xlg-4">
+  <div class="col-12 col-lg-6 col-xlg-4">
     <div class="card perfil--sombra perfil--borde">
       <div class="card-body little-profile text-center">
         <div class="pro-img m-t-20"><img src="../assets/images/users/4.jpg" alt="user"></div>
@@ -27,15 +27,123 @@
 
         </div>
       </div>
-      <div class="card-footer text-center">
-        <a href="javascript:void(0)" (click)="abrirModal()"
-          class="m-t-10 m-b-20 waves-effect waves-dark btn btn-success btn-md btn-rounded"><i class="fa fa-key"></i>
+      <div class="card-footer text-center" data-toggle="modal" data-target="#myModal_changes_pass">
+        <a href="javascript:void(0)" class="m-t-10 m-b-20 waves-effect waves-dark btn btn-success btn-md btn-rounded"
+          (click)="this.borrarFormulario(formDirective)"><i class="fa fa-key"></i>
           Cambiar contraseña</a>
       </div>
     </div>
   </div>
 </div>
 
-<!-- Modal cambio de password -->
-<app-modalpassword *ngIf="mostrarModal" [titulo]="'Mi título'" [mensaje]="'Mi mensaje'" (cerrarModal)="cerrarModal()">
-</app-modalpassword>
+<!-- Modal cambiar contraseña -->
+<div id="myModal_changes_pass" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+  style="display: none;" aria-hidden="true" #myModaledit>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header bg-info">
+        <h4 class="modal-title text-white " id="myModalLabel">Cambiar contraseña</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+      </div>
+      <form #formDirective="ngForm" [formGroup]="this.formulario" class="ps-4 pt-4 pe-4 pb-0" (ngSubmit)="submit()">
+        <div class="modal-body">
+          <h3 class="box-title m-b-0">Formulario re registro de nueva contraseña</h3>
+          <p class="text-muted m-b-30 font-13"> Sistema de control de regalia minera </p>
+
+          <div class="p-2">
+            <!-- Usuario actual -->
+            <div class="usuario-actual">
+              <p class="mb-0">Usuario Actual:</p>
+              <mat-form-field class="example-full-width" appearance="outline">
+
+                <input type="text" matInput formControlName="actualUsuario" autocomplete="off" spellcheck="false"
+                  placeholder="Ingrese su contraseña actual">
+
+                <!-- Validacion -->
+                <!-- Preguntamos si es invalido y si esta sucio o a sido tocado -->
+                <mat-hint
+                  *ngIf="this.actualUsuario?.invalid && (this.actualUsuario?.dirty || this.actualUsuario?.touched)">
+                  <!-- Errores con expresiones regulares -->
+                  <div *ngIf="this.actualUsuario?.hasError('required')" class="animated fadeIn fast text-danger" id="">
+                    Este campo es requerido.
+                  </div>
+
+                </mat-hint>
+              </mat-form-field>
+            </div>
+
+            <!-- Contraseña actual -->
+            <div class="password-actual">
+              <p class="mb-0">Contraseña Actual:</p>
+              <mat-form-field class="example-full-width" appearance="outline">
+
+                <input type="text" matInput formControlName="actualPassword" autocomplete="off" spellcheck="false"
+                  placeholder="Ingrese su contraseña actual">
+
+                <!-- Validacion -->
+                <!-- Preguntamos si es invalido y si esta sucio o a sido tocado -->
+                <mat-hint
+                  *ngIf="this.actualPassword?.invalid && (this.actualPassword?.dirty || this.actualPassword?.touched)">
+                  <!-- Errores con expresiones regulares -->
+                  <div *ngIf="this.actualPassword?.hasError('required')" class="animated fadeIn fast text-danger" id="">
+                    Este campo es requerido.
+                  </div>
+
+                </mat-hint>
+              </mat-form-field>
+
+              <!-- Nueva contraseña -->
+              <div class="password">
+                <p class="mb-0">Nueva contraseña:</p>
+                <mat-form-field class="example-full-width" appearance="outline">
+
+                  <input type="text" matInput formControlName="nuevoPassword" autocomplete="off" spellcheck="false"
+                    placeholder="Ingrese su contraseña actual">
+
+                  <!-- Validacion -->
+                  <!-- Preguntamos si es invalido y si esta sucio o a sido tocado -->
+                  <mat-hint
+                    *ngIf="this.nuevoPassword?.invalid && (this.nuevoPassword?.dirty || this.nuevoPassword?.touched)">
+                    <!-- Errores con expresiones regulares -->
+                    <div *ngIf="this.nuevoPassword?.hasError('required')" class="animated fadeIn fast text-danger"
+                      id="">
+                      Este campo es requerido.
+                    </div>
+                    <div *ngIf="this.nuevoPassword?.hasError('pattern')" class="animated fadeIn fast text-danger" id="">
+                      Este campo debe tener al menos 6 caracteres, un número, una letra mayuscula y un caracter
+                      especial.
+                    </div>
+                  </mat-hint>
+                </mat-form-field>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Footer guardar botones -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger waves-effect" data-dismiss="modal">Cancelar</button>
+
+          <div *ngIf="this.btnSave; else notBtnSave" class="">
+            <button type="submit" class="ms-2 btn btn-primary waves-effect" [disabled]="this.formulario.invalid">
+              Guardar
+            </button>
+          </div>
+
+          <ng-template #notBtnSave>
+            <button type="submit" class="ms-2 btn btn-primary waves-effect" [disabled]="this.notBtnSave">
+              <mat-spinner diameter="20"></mat-spinner>
+              <span class="ms-2">Guardando</span>
+            </button>
+          </ng-template>
+
+        </div>
+      </form>
+    </div>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>
+<!-- FIN Modal cambiar contraseña -->

@@ -71,9 +71,29 @@ export class UsuarioService {
           localStorage.setItem('token', resp);
         }
       }),
-      map(resp => (resp === '') ? false : true)
+      map((resp: any) => (resp === '') ? false : true)
     );
 
   }
+
+  /**
+   * Servicio para cambio de password
+   */
+  public loginChangesPassword(formData: any) {
+    let parameters = new HttpHeaders();
+    parameters = parameters.set('token-usuario', this.token!);
+    return this.http.post<any>(`${base_url}/api/login`, formData, { headers: parameters });
+  }
+
+
+  /**
+   * Actualizacion de password
+   */
+  public updateChangesPassword(password: any) {
+    let parameters = new HttpHeaders();
+    parameters = parameters.set('token-usuario', this.token);
+    return this.http.post<any>(base_url + '/api/user/changespassword', password, { headers: parameters });
+  }
+
 
 }

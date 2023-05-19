@@ -42,11 +42,23 @@ export class SidebarService {
     },
 
     {
+      titulo: 'Usuarios',
+      icono: 'mdi mdi-account-multiple-plus',
+      submenu: [
+        { titulo: 'Listar usuarios', url: 'usuario' },
+        { titulo: 'Servidores publicos', url: 'servidores' },
+        { titulo: 'Mineros', url: 'servicios' },
+        { titulo: 'Agentes de Retencion', url: 'servicios' },
+      ]
+    },
+
+    {
       titulo: 'Configuraciones',
       icono: 'mdi mdi-clipboard-text',
       submenu: [
-        { titulo: 'Usuarios', url: 'usuario' },
-        { titulo: 'Roles', url: 'servicios' },
+        { titulo: 'Servidores publicos', url: 'usuario' },
+        { titulo: 'Mineros', url: 'servicios' },
+        { titulo: 'Agentes de Retencion', url: 'servicios' },
       ]
     },
 

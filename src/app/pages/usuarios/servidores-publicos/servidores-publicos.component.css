@@ -1,0 +1,45 @@
+/* Angular material*/
+.example-radio-group {
+  display: flex;
+  flex-direction: column;
+  margin: 15px 0;
+  align-items: flex-start;
+}
+
+.example-radio-button {
+  margin: 5px;
+}
+
+::ng-deep .mat-form-field-infix {
+  border-top: 0.32375em solid rgba(0, 0, 0, 0) !important;
+}
+
+table {
+  width: 100%;
+}
+
+th.mat-sort-header-sorted {
+  color: black;
+}
+
+/* CSS del componente */
+.table-header {
+  background: linear-gradient(90deg, #1b232b 0%, #1f2831 35%, #2f3d4a 100%);
+}
+
+.table-header .mat-header-cell {
+  color: white;
+}
+
+/* Fin Angular material*/
+
+.btn-margen {
+  margin-bottom: 5px;
+}
+
+@media (min-width: 1354px) {
+  .btn-margen {
+    margin-bottom: 0px;
+    margin-right: 5px;
+  }
+}

@@ -1,0 +1,17 @@
+/* Angular material*/
+.example-radio-group {
+  display: flex;
+  flex-direction: column;
+  margin: 15px 0;
+  align-items: flex-start;
+}
+
+.example-radio-button {
+  margin: 5px;
+}
+
+::ng-deep .mat-form-field-infix {
+  border-top: 0.32375em solid rgba(0, 0, 0, 0) !important;
+}
+
+/* Fin Angular material*/

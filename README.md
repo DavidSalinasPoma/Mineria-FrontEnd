@@ -1,4 +1,4 @@
-# Portal Ciudadano
+# Mineria FrontEnd
 
 # Paso 1: Configurar angular para nuevo proyecto
 

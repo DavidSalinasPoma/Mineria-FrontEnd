@@ -4990,6 +4990,7 @@ button.close {
   display: none;
   overflow: hidden;
   outline: 0;
+  background-color: rgba(0, 0, 0, 0.7);
 }
 
 .modal.fade .modal-dialog {
@@ -5029,7 +5030,7 @@ button.close {
   outline: 0;
 }
 
-.modal-backdrop {
+/* .modal-backdrop {
   position: fixed;
   top: 0;
   right: 0;
@@ -5045,7 +5046,7 @@ button.close {
 
 .modal-backdrop.show {
   opacity: 0.5;
-}
+} */
 
 .modal-header {
   display: -ms-flexbox;
@@ -5111,6 +5112,12 @@ button.close {
 @media (min-width: 992px) {
   .modal-lg {
     max-width: 800px;
+  }
+}
+
+@media (min-width: 992px) {
+  .modal-xl {
+    max-width: 1100px;
   }
 }
 
