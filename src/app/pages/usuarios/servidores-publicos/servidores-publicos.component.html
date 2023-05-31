@@ -2,7 +2,6 @@
   <div class="col-12">
     <div class="card">
       <div class="card-body">
-
         <div class="d-flex justify-content-between animated fadeIn fast">
           <div class="titulos-tabla">
             <h4 class="card-title">Lista de servidores publicos</h4>
@@ -10,7 +9,7 @@
           </div>
           <!-- btn-crear-nuevos-usuarios -->
           <div class="btn-crear-usuario mb-2 mb-lg-0">
-            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal_crear_usuario"
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal_crear_servidor"
               (click)="this.borrarFormulario(formDirective)"><i class=" fa fa-user-plus"></i> Crear servidor
               publico</button>
           </div>
@@ -23,113 +22,137 @@
           <mat-icon matSuffix>search</mat-icon>
         </mat-form-field>
 
+        <!-- Matdatatablet lista de datos para servidores -->
+        <!-- Loading -->
+        <div [hidden]="this.cargando" class="row animated fadeIn fast">
+          <div class="col-12">
+            <div class="alert alert-dark text-center">
+              <h4 class="alert-heading">Cargando</h4>
+              <i class="fa fa-spin fa-refresh fa-2x"></i>
+              <p class="mb-0">Por favor espere</p>
+            </div>
+          </div>
+        </div>
 
-        <!-- Table Material -->
-        <table mat-table [dataSource]="dataSource" matSort (matSortChange)="announceSortChange($event)"
-          class="mat-elevation-z8">
+        <div [hidden]="!this.cargando" class="mat-elevation-z8 animated fadeIn fast">
+          <table mat-table [dataSource]="dataSource" matSort (matSortChange)="announceSortChange($event)">
 
-          <!-- Codigo -->
-          <ng-container matColumnDef="codigo">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by codigo">
-              Codigo
-            </th>
-            <td mat-cell *matCellDef="let element"> {{element.id}} </td>
-          </ng-container>
+            <!-- Codigo id -->
+            <ng-container matColumnDef="id">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by id">
+                Codigo
+              </th>
+              <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+            </ng-container>
 
-          <!-- Nombre completo -->
-          <ng-container matColumnDef="nombres">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by nombres">
-              Nombre completo
-            </th>
-            <td mat-cell *matCellDef="let element"> {{element.nombres}} {{ element.paterno }} {{ element.materno }}</td>
-          </ng-container>
+            <!-- Nombres -->
+            <ng-container matColumnDef="nombres">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by nombres">
+                Nombres
+              </th>
+              <td mat-cell *matCellDef="let element"> {{element.nombres}} </td>
+            </ng-container>
 
-          <!-- Carnet -->
-          <ng-container matColumnDef="carnet">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by carnet">
-              Carnet
-            </th>
-            <td mat-cell *matCellDef="let element"> {{element.carnet}} </td>
-          </ng-container>
+            <!-- Paterno -->
+            <ng-container matColumnDef="paterno">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by paterno">
+                Ap. paterno
+              </th>
+              <td mat-cell *matCellDef="let element"> {{element.paterno}} </td>
+            </ng-container>
 
-          <!-- Telefono -->
-          <ng-container matColumnDef="telefono">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by telefono">
-              telefono
-            </th>
-            <td mat-cell *matCellDef="let element"> {{element.telefono}} </td>
-          </ng-container>
+            <!-- Symbol Column -->
+            <ng-container matColumnDef="materno">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by materno">
+                Ap. materno
+              </th>
+              <td mat-cell *matCellDef="let element"> {{element.materno}} </td>
+            </ng-container>
 
-          <!-- Email -->
-          <ng-container matColumnDef="email">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by email">
-              Email
-            </th>
-            <td mat-cell *matCellDef="let element"> {{element.email}} </td>
-          </ng-container>
+            <!-- Carnet -->
+            <ng-container matColumnDef="carnet">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by carnet">
+                Carnet
+              </th>
+              <td mat-cell *matCellDef="let element"> {{element.carnet}} </td>
+            </ng-container>
 
-          <!-- Direccion -->
-          <ng-container matColumnDef="direccion">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by direccion">
-              Direccion
-            </th>
-            <td mat-cell *matCellDef="let element"> {{element.direccion}} </td>
-          </ng-container>
+            <!-- Telefono -->
+            <ng-container matColumnDef="telefono">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by telefono">
+                Telefono
+              </th>
+              <td mat-cell *matCellDef="let element"> {{element.telefono}} </td>
+            </ng-container>
 
-          <!-- Estado -->
-          <ng-container matColumnDef="estado">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by estado">
-              Estado
-            </th>
-            <td mat-cell *matCellDef="let element">
-              <span *ngIf="element.estado === 'habilitado'; else notHabilitado"
-                class="p-1 bg-success text-white border rounded">{{element.estado}}</span>
-              <ng-template #notHabilitado>
-                <span class="p-1 bg-danger text-white border rounded">{{element.estado}}</span>
-              </ng-template>
-            </td>
+            <!-- Email -->
+            <ng-container matColumnDef="email">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by email">
+                Email
+              </th>
+              <td mat-cell *matCellDef="let element"> {{element.email}} </td>
+            </ng-container>
 
-          </ng-container>
+            <!-- Direccion -->
+            <ng-container matColumnDef="direccion">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by direccion">
+                Dirección
+              </th>
+              <td mat-cell *matCellDef="let element"> {{element.direccion}} </td>
+            </ng-container>
 
-          <!-- Acciones -->
-          <ng-container matColumnDef="acciones">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by acciones">
-              Acciones
-            </th>
-            <td mat-cell *matCellDef="let element" class="p-2">
+            <!-- Estado -->
+            <ng-container matColumnDef="estado">
+              <th mat-header-cell *matHeaderCellDef>
+                Estado
+              </th>
+              <td mat-cell *matCellDef="let element">
+                <span *ngIf="element.estado === 'habilitado'; else notHabilitado"
+                  class="p-1 bg-success text-white border rounded">{{element.estado}}</span>
+                <ng-template #notHabilitado>
+                  <span class="p-1 bg-danger text-white border rounded">{{element.estado}}</span>
+                </ng-template>
+              </td>
+            </ng-container>
 
-              <a class="text-warning btn-margen" mat-icon-button matTooltip="Editar datos" matTooltipPosition="left"
-                (click)="this.modificarServidoresPublicos(element.id)">
-                <mat-icon>edit</mat-icon>
-              </a>
+            <!-- Acciones -->
+            <ng-container matColumnDef="acciones">
+              <th mat-header-cell *matHeaderCellDef>
+                Acciones
+              </th>
+              <td mat-cell *matCellDef="let element" class="p-2">
 
-              <a class="text-danger" mat-icon-button matTooltip="Dar de baja" matTooltipPosition="right">
-                <mat-icon>delete_outline</mat-icon>
-              </a>
+                <a class="text-warning btn-margen" mat-icon-button matTooltip="Editar datos" matTooltipPosition="left"
+                  (click)="this.modificarServidoresPublicos(element.id)">
+                  <mat-icon>edit</mat-icon>
+                </a>
 
-            </td>
-          </ng-container>
+                <a class="text-danger" mat-icon-button matTooltip="Dar de baja" matTooltipPosition="right"
+                  (click)="this.destroyServidorPublico(element.id,element.nombres,element.paterno,element.estado)">
+                  <mat-icon>delete_outline</mat-icon>
+                </a>
 
+              </td>
+            </ng-container>
 
-
-          <tr mat-header-row *matHeaderRowDef="displayedColumns" class="table-header"></tr>
-          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-        </table>
-        <!-- FIN Table Material -->
+            <tr mat-header-row *matHeaderRowDef="displayedColumns" class="table-header"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+          </table>
+          <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Select page of users"></mat-paginator>
+        </div>
 
       </div>
     </div>
   </div>
 </div>
 
-
-
 <!-- Modal crear usuarios -->
 <div class="card">
   <div class="card-body">
     <!-- sample modal content -->
     <div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" style="display: none;"
-      aria-hidden="true" id="myModal_crear_usuario">
+      aria-hidden="true" id="myModal_crear_servidor">
+
       <form #formDirective="ngForm" [formGroup]="this.formulario" class="ps-4 pt-4 pe-4 pb-0" (ngSubmit)="submit()">
         <div class="modal-dialog modal-xl">
           <div class="modal-content">

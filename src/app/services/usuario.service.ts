@@ -14,6 +14,7 @@ import { Router } from '@angular/router';
 
 // Modelo usuarios
 import { Usuario } from '../models/usuario.models';
+import { ServidorInterface } from '../models/servidor.model';
 
 // Variables globales
 const base_url = environment.base_url;
@@ -92,7 +93,7 @@ export class UsuarioService {
   public updateChangesPassword(password: any) {
     let parameters = new HttpHeaders();
     parameters = parameters.set('token-usuario', this.token);
-    return this.http.post<any>(base_url + '/api/user/changespassword', password, { headers: parameters });
+    return this.http.post<ServidorInterface>(base_url + '/api/user/changespassword', password, { headers: parameters });
   }
 
 

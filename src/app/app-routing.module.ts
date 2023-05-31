@@ -6,7 +6,8 @@ import { AuthRoutingModule } from './auth/auth-routing.module';
 import { PagesRoutingModule } from './pages/pages-routing.module';
 
 // Componentes de APP
-import { NopagescomponentComponent } from './nopagescomponent/nopagescomponent.component';
+import { NopagesfoundComponent } from './nopagesfound/nopagesfound.component';
+
 
 const routes: Routes = [
   // Si es un path vacio va a redirecionar a -> home y esto a un -> path: '', component: DashboardComponent
@@ -14,7 +15,7 @@ const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
 
   // Cualquiera otra ruta que no este definida en este routing va a mostrar NoPagesFound
-  { path: '**', component: NopagescomponentComponent },
+  { path: '**', component: NopagesfoundComponent },
 ];
 
 

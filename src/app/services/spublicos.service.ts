@@ -90,4 +90,14 @@ export class SpublicosService {
   }
 
 
+  /**
+   * eliminar Servidor
+   */
+  public destroyServidorPublico(id: number) {
+    let parameters = new HttpHeaders();
+    parameters = parameters.set('token-usuario', this.token);
+    return this.http.delete<any>(base_url + '/api/servidores/' + id, { headers: parameters });
+  }
+
+
 }

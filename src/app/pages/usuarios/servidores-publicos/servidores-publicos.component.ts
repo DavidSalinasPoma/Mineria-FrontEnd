@@ -1,7 +1,9 @@
 import { AfterViewInit, Component, ViewChild, OnInit } from '@angular/core';
+
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { MatSort, Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+
 import { FormBuilder, FormGroup, FormGroupDirective, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
@@ -14,6 +16,10 @@ import Swal from 'sweetalert2';
 
 // Notificaciones
 import { ToastrService } from 'ngx-toastr';
+import { MatPaginator } from '@angular/material/paginator';
+
+// Modelos
+import { ServidorInterface } from 'src/app/models/servidor.model';
 
 
 // Utilizando jquery
@@ -27,24 +33,19 @@ interface TipoUsuario {
   viewValue: string;
 }
 
-export interface ListaServidores {
-  codigo: number;
-  nombres: string;
-  paterno: string;
-  materno: string;
-  carnet: string;
-  telefono: number;
-  email: string;
-  direccion: string;
-  estado: number;
-  created_at: string;
-  updated_at: string;
-}
-
 interface EstadoServidor {
   value: string;
   estado: string;
 }
+
+// Prueba
+export interface PeriodicElement {
+  name: string;
+  position: number;
+  weight: number;
+  symbol: string;
+}
+// FIN PRUEBA
 
 
 @Component({
@@ -52,12 +53,14 @@ interface EstadoServidor {
   templateUrl: './servidores-publicos.component.html',
   styleUrls: ['./servidores-publicos.component.css']
 })
-export class ServidoresPublicosComponent implements OnInit {
+export class ServidoresPublicosComponent implements OnInit, AfterViewInit {
 
   // Material
-  public displayedColumns: string[] = ['codigo', 'nombres', 'carnet', 'telefono', 'email', 'direccion', 'estado', 'acciones'];
-  public dataSource: any = new MatTableDataSource([]); // Declaración
+  public displayedColumns: string[] = ['id', 'nombres', 'paterno', 'materno', 'carnet', 'telefono', 'email', 'direccion', 'estado', 'acciones'];
+  public dataSource: MatTableDataSource<ServidorInterface> = new MatTableDataSource<ServidorInterface>([]);
 
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
 
   // Información de usuario de sistema
   public usuario: any;
@@ -69,12 +72,6 @@ export class ServidoresPublicosComponent implements OnInit {
     { value: 'minero', viewValue: 'Minero' },
     { value: 'agente', viewValue: 'Agente de retención' },
   ];
-
-  @ViewChild(MatSort) sort!: MatSort;
-
-
-  public favoriteSeason!: string;
-  public seasons: string[] = ['Operador', 'Seguimiento', 'Administrador', 'Secretaria'];
 
   // Formularios reactivos
   public formulario!: FormGroup;
@@ -90,6 +87,10 @@ export class ServidoresPublicosComponent implements OnInit {
   ];
 
   public idServidor!: number;
+
+  // loading para atributo [hidden]
+  // [hidden]= true  -> oculta el contenido
+  public cargando: boolean = false;
 
   constructor(
     private router: Router,
@@ -115,8 +116,8 @@ export class ServidoresPublicosComponent implements OnInit {
   }
 
   /**
-* crearFormulario
-*/
+  * crearFormulario
+  */
   public crearFormulario() {
     this.formulario = this.fb.group({
       nombres: ['', Validators.compose([Validators.required, Validators.pattern('[a-zA-Z ]*'), Validators.maxLength(50)])],
@@ -171,6 +172,7 @@ export class ServidoresPublicosComponent implements OnInit {
       estadoM: ['', Validators.compose([Validators.required])]
     });
   }
+
   get nombresM() {
     return this.formulario.get('nombresM');
   }
@@ -209,20 +211,22 @@ export class ServidoresPublicosComponent implements OnInit {
    */
   public submit() {
     this.btnSave = false;
+    this.cargando = false;
     this.sevidorServices.storeServidoresPublicos(this.formulario.value)
       .subscribe(({ status, message }) => {
 
         if (status === 'success') {
-          $('#myModal_agregar').modal('hide');
-          // this.indexUsuarios();
+          $('#myModal_crear_servidor').modal('hide');
+          this.indexServidores(); //aqui esta this.cargando = true;
           Swal.fire({
             position: 'top-end',
             icon: 'success',
             title: `${message}`,
             text: 'Sistema de control y fiscalización de regalia minera',
             showConfirmButton: false,
-            timer: 1500
+            timer: 2000
           })
+
         } else {
           this.toastr.error(message, 'Sistema de control y fiscalización de regalia minera');
         }
@@ -233,9 +237,12 @@ export class ServidoresPublicosComponent implements OnInit {
         } else {
           Swal.fire('Error', err.error.message, 'error')
         }
+        this.cargando = true;
         this.btnSave = true;
+
       }, () => {
         this.btnSave = true;
+        this.cargando = true;
       });
   }
 
@@ -243,9 +250,11 @@ export class ServidoresPublicosComponent implements OnInit {
    * indexServidores
    */
   public indexServidores() {
+    this.cargando = false;
     this.sevidorServices.indexServidoresPublicos()
       .subscribe(({ servidor }) => {
-        this.dataSource = new MatTableDataSource(servidor);
+        this.cargando = true;
+        this.dataSource.data = servidor;
       })
   }
 
@@ -294,34 +303,29 @@ export class ServidoresPublicosComponent implements OnInit {
       estado: this.formularioModificar.value.estadoM,
     }
 
-    console.log(formData);
-
-
+    this.cargando = false;
     this.btnSave = false;
     this.sevidorServices.updateServidores(formData, this.idServidor)
       .subscribe(({ message }) => {
 
-        // Para mostrar la Busqueda
-        // if (this.mostrarReunionHtml) {
-        //   this.indexPaginacion();
-        // } else {
-        //   this.indexPaginacionBuscar();
-        // }
-
         $('#myModal_editar_servidor').modal('hide');
+        this.indexServidores();
         Swal.fire({
-          position: 'center',
+          position: 'top-end',
           icon: 'success',
           title: '¡Modificación Correcta!',
           text: `${message}`,
           showConfirmButton: false,
-          timer: 3000
+          timer: 2000
         })
+
       }, (err) => {
         console.log(err);
         Swal.fire('Error', err.error.message, 'error')
+        this.cargando = true;
         this.btnSave = true;
       }, () => {
+        this.cargando = true;
         this.btnSave = true;
       });
 
@@ -341,22 +345,54 @@ export class ServidoresPublicosComponent implements OnInit {
 
   // Data Table Material
   ngAfterViewInit() {
+    this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
   }
 
   /** Announce the change in sort state for assistive technology. */
   announceSortChange(sortState: Sort) {
-    console.log(sortState);
 
-    // This example uses English messages. If your application supports
-    // multiple language, you would internationalize these strings.
-    // Furthermore, you can customize the message to add additional
-    // details about the values being sorted.
     if (sortState.direction) {
       this._liveAnnouncer.announce(`Sorted ${sortState.direction}ending`);
     } else {
       this._liveAnnouncer.announce('Sorting cleared');
     }
   }
+  // FIN Data Table Material
 
+  /**
+  * destroyPersona
+  */
+  public destroyServidorPublico(id: number, nombres: string, paterno: string, estado: string) {
+
+    if (estado === 'no habilitado') {
+      this.toastr.error('Este servidor ya ha sido deshabilitado', 'Control de relagias mineras')
+    } else {
+      Swal.fire({
+        title: 'Se deshabilitara a:',
+        text: `${nombres + ' ' + paterno}`,
+        icon: 'question',
+        showCancelButton: true,
+        cancelButtonText: 'Cancelar!',
+        confirmButtonText: 'Si, deshabilitar!'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.sevidorServices.destroyServidorPublico(id)
+            .subscribe(({ status, message }) => {
+              if (status === 'success') {
+                this.indexServidores();
+                Swal.fire(
+                  `${nombres + ' ' + paterno}`,
+                  `A sido deshabilitado correctamente`,
+                  'success'
+                );
+              }
+            }, (err) => {
+              this.cargando = true;
+              Swal.fire('Error', err.error.message, 'error')
+            });
+        }
+      })
+    }
+  }
 }

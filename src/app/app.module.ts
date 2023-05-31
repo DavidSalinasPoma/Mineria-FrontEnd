@@ -10,7 +10,7 @@ import { PagesModule } from './pages/pages.module';
 
 // Componentes principales de APP
 import { AppComponent } from './app.component';
-import { NopagescomponentComponent } from './nopagescomponent/nopagescomponent.component';
+import { NopagesfoundComponent } from './nopagesfound/nopagesfound.component';
 
 // Para peticiones HTTP
 import { HttpClientModule } from '@angular/common/http';
@@ -29,7 +29,7 @@ import { LocationStrategy, HashLocationStrategy } from '@angular/common';
 @NgModule({
   declarations: [
     AppComponent,
-    NopagescomponentComponent
+    NopagesfoundComponent
   ],
   imports: [
     BrowserModule,
