@@ -32,6 +32,9 @@ export class HeaderComponent implements OnInit {
   public logout() {
 
     localStorage.removeItem('token');
+    localStorage.removeItem('items');
+    localStorage.removeItem('textoBuscar');
+    localStorage.removeItem('position');
 
     this.usuario = null;
     this.token = null;

@@ -1,16 +1,15 @@
 import { Injectable } from '@angular/core';
 
 // Para manejar las peticiones http// 
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 
 // El tap un efecto secuendario
-import { tap, map, catchError } from "rxjs/operators";
-import { Observable, of, Subject } from 'rxjs';
+import { tap, map } from "rxjs/operators";
+import { Observable, of } from 'rxjs';
 
 // Variables globales
 import { environment } from './../../environments/environment';
 
-import { Router } from '@angular/router';
 
 // Modelo usuarios
 import { Usuario } from '../models/usuario.models';
@@ -26,7 +25,6 @@ export class UsuarioService {
 
   constructor(
     private http: HttpClient,
-    private router: Router,
   ) { }
 
   // Token de usuario
@@ -39,7 +37,6 @@ export class UsuarioService {
     }
     return tokenActual;
   }
-
 
   // Servicio para el login
   /**
@@ -81,19 +78,18 @@ export class UsuarioService {
    * Servicio para cambio de password
    */
   public loginChangesPassword(formData: any) {
-    let parameters = new HttpHeaders();
-    parameters = parameters.set('token-usuario', this.token!);
-    return this.http.post<any>(`${base_url}/api/login`, formData, { headers: parameters });
-  }
 
+    return this.http.post<any>(`${base_url}/api/login`, formData);
+
+  }
 
   /**
    * Actualizacion de password
    */
   public updateChangesPassword(password: any) {
-    let parameters = new HttpHeaders();
-    parameters = parameters.set('token-usuario', this.token);
-    return this.http.post<ServidorInterface>(base_url + '/api/user/changespassword', password, { headers: parameters });
+
+    return this.http.post<ServidorInterface>(base_url + '/api/user/changespassword', password);
+
   }
 
 

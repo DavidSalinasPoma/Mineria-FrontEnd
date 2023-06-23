@@ -45,10 +45,10 @@ export class SidebarService {
       titulo: 'Usuarios',
       icono: 'mdi mdi-account-multiple-plus',
       submenu: [
-        { titulo: 'Listar usuarios', url: 'usuario' },
+        { titulo: 'Usuarios', url: 'usuarios' },
         { titulo: 'Servidores publicos', url: 'servidores' },
-        { titulo: 'Mineros', url: 'servicios' },
-        { titulo: 'Agentes de Retencion', url: 'servicios' },
+        { titulo: 'Mineros RUIM', url: 'ruim' },
+        { titulo: 'Agentes de Retencion ROCMIN', url: 'rocmin' },
       ]
     },
 

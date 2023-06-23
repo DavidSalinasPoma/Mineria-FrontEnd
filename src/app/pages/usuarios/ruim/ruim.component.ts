@@ -1,12 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 
-import { LiveAnnouncer } from '@angular/cdk/a11y';
-
 import { FormBuilder, FormGroup, FormGroupDirective, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
 
 // Servicios
 import { SpublicosService } from 'src/app/services/spublicos.service';
+import { RuimService } from 'src/app/services/ruim.service';
 
 // Alertas
 import Swal from 'sweetalert2';
@@ -16,6 +14,9 @@ import { ToastrService } from 'ngx-toastr';
 
 // Modelos
 import { ServidorInterface } from 'src/app/models/servidor.model';
+import { RuimInterface } from 'src/app/models/ruim.model';
+
+// RXJS
 import { Subject, debounceTime, distinctUntilChanged, takeUntil } from 'rxjs';
 
 
@@ -43,13 +44,12 @@ export interface PeriodicElement {
 }
 // FIN PRUEBA
 
-
 @Component({
-  selector: 'app-servidores-publicos',
-  templateUrl: './servidores-publicos.component.html',
-  styleUrls: ['./servidores-publicos.component.css']
+  selector: 'app-ruim',
+  templateUrl: './ruim.component.html',
+  styleUrls: ['./ruim.component.css']
 })
-export class ServidoresPublicosComponent implements OnInit {
+export class RuimComponent implements OnInit {
 
   // Información de usuario de sistema
   public usuario: any;
@@ -75,7 +75,7 @@ export class ServidoresPublicosComponent implements OnInit {
     { value: 'no habilitado', estado: 'No habilitado' }
   ];
 
-  public idServidor!: number;
+  public idRuims!: number;
 
   // loading para atributo [hidden]
   // [hidden]= true  -> oculta el contenido
@@ -88,6 +88,7 @@ export class ServidoresPublicosComponent implements OnInit {
 
 
   public dataServidores!: ServidorInterface[];
+  public dataRuims!: RuimInterface[];
 
   // Paginación
   public current_page: any;
@@ -110,11 +111,12 @@ export class ServidoresPublicosComponent implements OnInit {
 
 
   constructor(
-    private router: Router,
+
     private fb: FormBuilder,
     private toastr: ToastrService,
     private sevidorServices: SpublicosService,
-    private _liveAnnouncer: LiveAnnouncer
+    private ruimsServices: RuimService
+
   ) { }
 
   ngOnInit(): void {
@@ -123,7 +125,7 @@ export class ServidoresPublicosComponent implements OnInit {
 
     this.crearFormulario();
     this.crearFormularioModificar();
-    this.indexServidores();
+    this.indexRuims();
     // Buscador de servidores publicos
     this.submitSearch();
 
@@ -144,41 +146,41 @@ export class ServidoresPublicosComponent implements OnInit {
   */
   public crearFormulario() {
     this.formulario = this.fb.group({
-      nombres: ['', Validators.compose([Validators.required, Validators.pattern('[a-zA-Z ]*'), Validators.maxLength(50)])],
-      paterno: ['', Validators.compose([Validators.required, Validators.pattern('[a-zA-Z ]*'), Validators.maxLength(50)])],
-      materno: ['', Validators.compose([Validators.required, Validators.pattern('[a-zA-Z ]*'), Validators.maxLength(50)])],
-      carnet: ['', Validators.compose([Validators.required, Validators.maxLength(12)])],
-      telefono: ['', Validators.compose([Validators.required, Validators.pattern('^[0-9]+$'), Validators.maxLength(10)])],
-      email: ['', Validators.compose([Validators.required, Validators.email, Validators.maxLength(50)])],
-      direccion: ['', Validators.compose([Validators.required])]
+      nro_id_mineria: ['', Validators.compose([Validators.required, Validators.maxLength(20)])],
+      sector: ['', Validators.compose([Validators.required, Validators.maxLength(50)])],
+      actividad: ['', Validators.compose([Validators.required, Validators.maxLength(70)])],
+      rep_legal: ['', Validators.compose([Validators.required, Validators.pattern('[a-zA-Z ]*'), Validators.maxLength(50)])],
+      municipio: ['', Validators.compose([Validators.required])],
+      fecha_registro: ['', Validators.compose([Validators.required])],
+      fecha_expiracion: ['', Validators.compose([Validators.required])]
     });
   }
-  get nombres() {
-    return this.formulario.get('nombres');
+  get nro_id_mineria() {
+    return this.formulario.get('nro_id_mineria');
   }
 
-  get paterno() {
-    return this.formulario.get('paterno');
+  get sector() {
+    return this.formulario.get('sector');
   }
 
-  get materno() {
-    return this.formulario.get('materno');
+  get actividad() {
+    return this.formulario.get('actividad');
   }
 
-  get carnet() {
-    return this.formulario.get('carnet');
+  get rep_legal() {
+    return this.formulario.get('rep_legal');
   }
 
-  get telefono() {
-    return this.formulario.get('telefono');
+  get municipio() {
+    return this.formulario.get('municipio');
   }
 
-  get email() {
-    return this.formulario.get('email');
+  get fecha_registro() {
+    return this.formulario.get('fecha_registro');
   }
 
-  get direccion() {
-    return this.formulario.get('direccion');
+  get fecha_expiracion() {
+    return this.formulario.get('fecha_expiracion');
   }
 
   /**
@@ -186,43 +188,43 @@ export class ServidoresPublicosComponent implements OnInit {
   */
   public crearFormularioModificar() {
     this.formularioModificar = this.fb.group({
-      nombresM: ['', Validators.compose([Validators.required, Validators.pattern('[a-zA-Z ]*'), Validators.maxLength(50)])],
-      paternoM: ['', Validators.compose([Validators.required, Validators.pattern('[a-zA-Z ]*'), Validators.maxLength(50)])],
-      maternoM: ['', Validators.compose([Validators.required, Validators.pattern('[a-zA-Z ]*'), Validators.maxLength(50)])],
-      carnetM: ['', Validators.compose([Validators.required, Validators.maxLength(12)])],
-      telefonoM: ['', Validators.compose([Validators.required, Validators.pattern('^[0-9]+$'), Validators.maxLength(10)])],
-      emailM: ['', Validators.compose([Validators.required, Validators.email, Validators.maxLength(50)])],
-      direccionM: ['', Validators.compose([Validators.required])],
+      nro_id_mineriaM: ['', Validators.compose([Validators.required, Validators.maxLength(20)])],
+      sectorM: ['', Validators.compose([Validators.required, Validators.maxLength(50)])],
+      actividadM: ['', Validators.compose([Validators.required, Validators.maxLength(70)])],
+      rep_legalM: ['', Validators.compose([Validators.required, Validators.pattern('[a-zA-Z ]*'), Validators.maxLength(50)])],
+      municipioM: ['', Validators.compose([Validators.required])],
+      fecha_registroM: ['', Validators.compose([Validators.required])],
+      fecha_expiracionM: ['', Validators.compose([Validators.required])],
       estadoM: ['', Validators.compose([Validators.required])]
     });
   }
 
-  get nombresM() {
-    return this.formulario.get('nombresM');
+  get nro_id_mineriaM() {
+    return this.formulario.get('nro_id_mineriaM');
   }
 
-  get paternoM() {
-    return this.formulario.get('paternoM');
+  get sectorM() {
+    return this.formulario.get('sectorM');
   }
 
-  get maternoM() {
-    return this.formulario.get('maternoM');
+  get actividadM() {
+    return this.formulario.get('actividadM');
   }
 
-  get carnetM() {
-    return this.formulario.get('carnetM');
+  get rep_legalM() {
+    return this.formulario.get('rep_legalM');
   }
 
-  get telefonoM() {
-    return this.formulario.get('telefonoM');
+  get municipioM() {
+    return this.formulario.get('municipioM');
   }
 
-  get emailM() {
-    return this.formulario.get('emailM');
+  get fecha_registroM() {
+    return this.formulario.get('fecha_registroM');
   }
 
-  get direccionM() {
-    return this.formulario.get('direccionM');
+  get fecha_expiracionM() {
+    return this.formulario.get('fecha_expiracionM');
   }
 
   get estadoM() {
@@ -235,15 +237,16 @@ export class ServidoresPublicosComponent implements OnInit {
   public submit() {
     this.btnSave = false;
     this.cargando = true;
-    this.sevidorServices.storeServidoresPublicos(this.formulario.value)
+    this.ruimsServices.storeRuims(this.formulario.value)
       .subscribe({
         next: ({ status, message }) => {
+
           if (status === 'success') {
 
             this.eliminarLocalStorage();
 
-            $('#myModal_crear_servidor').modal('hide');
-            this.indexServidores(); //aqui esta this.cargando = true;
+            $('#myModal_crear_ruim').modal('hide');
+            this.indexRuims(); //aqui esta this.cargando = true;
             // Limpiar el campo de búsqueda
             this.searchTerm = '';
             Swal.fire({
@@ -259,12 +262,11 @@ export class ServidoresPublicosComponent implements OnInit {
           }
         },
         error: (err: any) => {
-          // console.log(err);
+          console.log(err);
           this.cargando = false;
           this.btnSave = true;
-
-          if (err.error.errors.carnet) {
-            Swal.fire('Error', err.error.errors.carnet[0], 'error')
+          if (err.error.errors.nro_id_mineria) {
+            Swal.fire('Error', err.error.errors.nro_id_mineria[0], 'error')
           } else {
             Swal.fire('Error', err.error.message, 'error')
           }
@@ -279,8 +281,124 @@ export class ServidoresPublicosComponent implements OnInit {
   }
 
   /**
-   * indexServidores
+   * indexRuims
    */
+  public indexRuims() {
+
+    this.dataRuims = [];
+    this.cargando = true;
+
+    // Condicion si es para el textoBuscar
+    const textoBuscar = localStorage.getItem('textoBuscar');
+
+    if (textoBuscar != null) {
+
+      const posicion = localStorage.getItem('position');
+
+      const formData: { ruim: string, page: number } = {
+        ruim: textoBuscar,
+        page: Number(posicion)
+      }
+
+      this.cargando = true;
+      this.ruimsServices.searchRuims(formData)
+        .subscribe(({ ruims }) => {
+
+          const {
+            data,
+            current_page,
+            first_page_url,
+            from,
+            last_page,
+            last_page_url,
+            next_page_url,
+            path,
+            per_page,
+            prev_page_url,
+            to,
+            total
+          } = ruims;
+
+          this.dataRuims = data;
+          console.log(this.dataRuims);
+
+
+          this.current_page = current_page;
+          this.first_page_url = first_page_url;
+          this.from = from;
+          this.last_page = last_page;
+          this.last_page_url = last_page_url;
+          this.next_page_url = next_page_url;
+          this.path = path;
+          this.per_page = per_page;
+          this.prev_page_url = prev_page_url;
+          this.to = to;
+          this.total = total;
+
+          this.p = this.current_page;
+
+          this.cargando = false;
+
+          // Para paginación
+          localStorage.setItem('position', `${this.p}`);
+          localStorage.setItem('items', `${this.total}`);
+        })
+
+    } else {
+      let pagina = 1;
+      const position = localStorage.getItem('position');
+      if (position != null) {
+        pagina = Number(position);
+      }
+
+      this.ruimsServices.indexRuims(pagina)
+        .subscribe(({ ruims }) => {
+
+          const {
+            data,
+            current_page,
+            first_page_url,
+            from,
+            last_page,
+            last_page_url,
+            next_page_url,
+            path,
+            per_page,
+            prev_page_url,
+            to,
+            total
+          } = ruims;
+
+          this.cargando = false;
+          this.dataRuims = data;
+
+          this.current_page = current_page;
+          this.first_page_url = first_page_url;
+          this.from = from;
+          this.last_page = last_page;
+          this.last_page_url = last_page_url;
+          this.next_page_url = next_page_url;
+          this.path = path;
+          this.per_page = per_page;
+          this.prev_page_url = prev_page_url;
+          this.to = to;
+          this.total = total;
+
+          this.p = current_page;
+
+          // Para paginación
+          localStorage.setItem('position', `${this.p}`);
+          localStorage.setItem('items', `${this.total}`);
+
+        })
+    }
+
+
+  }
+
+  /**
+  * indexServidores ELIMINAR
+  */
   public indexServidores() {
 
     this.dataServidores = [];
@@ -318,6 +436,8 @@ export class ServidoresPublicosComponent implements OnInit {
           } = servidores;
 
           this.dataServidores = data;
+          console.log(this.dataServidores);
+
 
           this.current_page = current_page;
           this.first_page_url = first_page_url;
@@ -392,32 +512,40 @@ export class ServidoresPublicosComponent implements OnInit {
 
   }
 
+
   /**
   * Cargar datos para modificar servidores
   */
-  public modificarServidoresPublicos(id: number) {
+  public modificarRuims(id: number) {
 
-    this.idServidor = id;
+    this.idRuims = id;
 
-    this.sevidorServices.showServidoresPublicos(id)
-      .subscribe(({ servidor }) => {
+    this.ruimsServices.showRuims(id)
+      .subscribe({
+        next: ({ ruims }) => {
 
-        this.formularioModificar.setValue({
-          nombresM: servidor.nombres,
-          paternoM: servidor.paterno,
-          maternoM: servidor.materno,
-          carnetM: servidor.carnet,
-          telefonoM: servidor.telefono,
-          emailM: servidor.email,
-          direccionM: servidor.direccion,
-          estadoM: servidor.estado,
-        });
+          let ruimsData: RuimInterface = ruims;
 
-      }, (err) => {
-        Swal.fire('Error', err.error.message, 'error')
+          this.formularioModificar.setValue({
+            nro_id_mineriaM: ruimsData.nro_id_mineria,
+            sectorM: ruimsData.sector,
+            actividadM: ruimsData.actividad,
+            rep_legalM: ruimsData.rep_legal,
+            municipioM: ruimsData.municipio,
+            fecha_registroM: ruimsData.fecha_registro,
+            fecha_expiracionM: ruimsData.fecha_expiracion,
+            estadoM: ruimsData.estado,
+          });
+
+        },
+        error: (err: any) => {
+          Swal.fire('Error', err.error.message, 'error')
+        },
+        complete: () => {
+
+        }
       });
-
-    $('#myModal_editar_servidor').modal('show');
+    $('#myModal_editar_ruims').modal('show');
   }
 
   /**
@@ -425,43 +553,47 @@ export class ServidoresPublicosComponent implements OnInit {
   */
   public submitModificar() {
 
-    const formData = {
-      nombres: this.formularioModificar.value.nombresM,
-      paterno: this.formularioModificar.value.paternoM,
-      materno: this.formularioModificar.value.maternoM,
-      carnet: this.formularioModificar.value.carnetM,
-      telefono: this.formularioModificar.value.telefonoM,
-      email: this.formularioModificar.value.emailM,
-      direccion: this.formularioModificar.value.direccionM,
+    const formData: RuimInterface = {
+      nro_id_mineria: this.formularioModificar.value.nro_id_mineriaM,
+      sector: this.formularioModificar.value.sectorM,
+      actividad: this.formularioModificar.value.actividadM,
+      rep_legal: this.formularioModificar.value.rep_legalM,
+      municipio: this.formularioModificar.value.municipioM,
+      fecha_registro: this.formularioModificar.value.fecha_registroM,
+      fecha_expiracion: this.formularioModificar.value.fecha_expiracionM,
       estado: this.formularioModificar.value.estadoM,
     }
 
     this.cargando = true;
     this.btnSave = false;
-    this.sevidorServices.updateServidores(formData, this.idServidor)
-      .subscribe(({ message }) => {
 
-        $('#myModal_editar_servidor').modal('hide');
-        this.indexServidores();
-        Swal.fire({
-          position: 'top-end',
-          icon: 'success',
-          title: '¡Modificación Correcta!',
-          text: `${message}`,
-          showConfirmButton: false,
-          timer: 2000
-        })
+    this.ruimsServices.updateRuims(formData, this.idRuims)
+      .subscribe({
 
-      }, (err) => {
-        console.log(err);
-        Swal.fire('Error', err.error.message, 'error')
-        this.cargando = false;
-        this.btnSave = true;
-      }, () => {
-        this.cargando = false;
-        this.btnSave = true;
+        next: ({ message }) => {
+          $('#myModal_editar_ruims').modal('hide');
+          this.indexRuims();
+          Swal.fire({
+            position: 'top-end',
+            icon: 'success',
+            title: '¡Modificación Correcta!',
+            text: `${message}`,
+            showConfirmButton: false,
+            timer: 2000
+          })
+        },
+        error: (err: any) => {
+          console.log(err);
+          this.cargando = false;
+          this.btnSave = true;
+          Swal.fire('Error', err.error.message, 'error')
+        },
+        complete: () => {
+          this.cargando = false;
+          this.btnSave = true;
+        }
+
       });
-
   }
 
   /**
@@ -478,33 +610,36 @@ export class ServidoresPublicosComponent implements OnInit {
   /**
   * destroyPersona
   */
-  public destroyServidorPublico(id: number, nombres: string, paterno: string, estado: string) {
+  public destroyRuim(id: number, nro_id_mineria: string, sector: string, estado: string) {
 
     if (estado === 'no habilitado') {
       this.toastr.error('Este servidor ya ha sido deshabilitado', 'Control de relagias mineras')
     } else {
       Swal.fire({
         title: 'Se deshabilitara a:',
-        text: `${nombres + ' ' + paterno}`,
+        text: `${nro_id_mineria + ' ' + sector}`,
         icon: 'question',
         showCancelButton: true,
         cancelButtonText: 'Cancelar!',
         confirmButtonText: 'Si, deshabilitar!'
       }).then((result) => {
         if (result.isConfirmed) {
-          this.sevidorServices.destroyServidorPublico(id)
-            .subscribe(({ status, message }) => {
-              if (status === 'success') {
-                this.indexServidores();
-                Swal.fire(
-                  `${nombres + ' ' + paterno}`,
-                  `A sido deshabilitado correctamente`,
-                  'success'
-                );
+          this.ruimsServices.destroyRuim(id)
+            .subscribe({
+              next: ({ status }) => {
+                if (status === 'success') {
+                  this.indexRuims();
+                  Swal.fire(
+                    `${nro_id_mineria + ' ' + sector}`,
+                    `A sido deshabilitado correctamente`,
+                    'success'
+                  );
+                }
+              },
+              error: (err) => {
+                this.cargando = false;
+                Swal.fire('Error', err.error.message, 'error')
               }
-            }, (err) => {
-              this.cargando = false;
-              Swal.fire('Error', err.error.message, 'error')
             });
         }
       })
@@ -524,6 +659,7 @@ export class ServidoresPublicosComponent implements OnInit {
       takeUntil(this.OnDestroy$)
     )
       .subscribe(texto => {
+        console.log(texto);
 
         localStorage.setItem('textoBuscar', texto);
 
@@ -554,6 +690,8 @@ export class ServidoresPublicosComponent implements OnInit {
               } = servidores;
 
               this.dataServidores = data;
+              console.log(this.dataServidores);
+
 
               this.current_page = current_page;
               this.first_page_url = first_page_url;
@@ -686,16 +824,18 @@ export class ServidoresPublicosComponent implements OnInit {
           localStorage.setItem('items', `${this.total}`);
         })
     }
+
   }
 
   /**
-    * eliminarLocalStorage
-    */
+   * eliminarLocalStorage
+   */
   public eliminarLocalStorage() {
     localStorage.removeItem('textoBuscar');
     localStorage.removeItem('items');
     localStorage.removeItem('position');
   }
+
 
 
 }

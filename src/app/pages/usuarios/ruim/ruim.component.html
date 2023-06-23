@@ -4,14 +4,13 @@
       <div class="card-body ">
         <div class="d-flex justify-content-between animated fadeIn fast">
           <div class="titulos-tabla">
-            <h4 class="card-title">Lista de servidores publicos</h4>
+            <h4 class="card-title">Lista de mineros RUIM</h4>
             <h6 class="card-subtitle">Sistema de control y fiscalización</h6>
           </div>
-          <!-- btn-crear-nuevos-usuarios -->
+          <!-- btn-crear-nuevos-mineros RUIM -->
           <div class="btn-crear-usuario mb-2 mb-lg-0">
-            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal_crear_servidor"
-              (click)="this.borrarFormulario(formDirective)"><i class=" fa fa-user-plus"></i> Crear servidor
-              publico</button>
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal_crear_ruim"
+              (click)="this.borrarFormulario(formDirective)"><i class=" fa fa-user-plus"></i> Crear minero RUIM</button>
           </div>
         </div>
 
@@ -41,29 +40,32 @@
               <thead class="table-header">
                 <tr class="table-header__encabezado">
                   <th style="width: 2%;">Codigo</th>
-                  <th>Nombres</th>
-                  <th>Ap. paterno</th>
-                  <th>Ap. materno</th>
-                  <th style="width: 110px;">Carnet</th>
-                  <th style="width: 100px;">Telefono</th>
-                  <th>Email</th>
-                  <th>Dirección</th>
+                  <th>Nro. id. minera</th>
+                  <th>Sector</th>
+                  <th>Actividad</th>
+                  <th style="width: 110px;">Rep. Legal</th>
+                  <th>municipio</th>
+                  <th style="width: 120px;">Fecha registro</th>
+                  <th style="width: 150px;">Fecha expiración</th>
                   <th style="width: 120px;">Estado</th>
                   <th style="width: 150px;">Acciones</th>
                 </tr>
               </thead>
               <tbody class="table-cuerpo">
                 <tr
-                  *ngFor="let item of this.dataServidores | paginate: { itemsPerPage: this.per_page, currentPage: this.p, totalItems:this.total, id: 'paginate_one' }"
+                  *ngFor="let item of this.dataRuims | paginate: { itemsPerPage: this.per_page, currentPage: this.p, totalItems:this.total, id: 'paginate_one' }"
                   class=" table-cuerpo__datos">
                   <td>{{ item.id }}</td>
-                  <td>{{ item.nombres }}</td>
-                  <td>{{ item.paterno }}</td>
-                  <td>{{ item.materno }}</td>
-                  <td>{{ item.carnet }}</td>
-                  <td>{{ item.telefono }}</td>
-                  <td>{{ item.email }}</td>
-                  <td>{{ item.direccion }}</td>
+                  <td>{{ item.nro_id_mineria }}</td>
+                  <td>{{ item.sector }}</td>
+                  <td>{{ item.actividad }}</td>
+                  <td>{{ item.rep_legal }}</td>
+                  <td>{{ item.municipio }}</td>
+
+                  <!-- Se aumento -->
+                  <td>{{ item.fecha_registro }}</td>
+                  <td>{{ item.fecha_expiracion }}</td>
+
                   <td>
                     <span *ngIf="item.estado === 'habilitado'; else notHabilitado"
                       class="p-1 bg-success text-white border rounded">{{item.estado}}</span>
@@ -73,12 +75,12 @@
                   </td>
                   <td>
                     <a class="text-warning btn-margen" mat-icon-button matTooltip="Editar datos"
-                      matTooltipPosition="left" (click)="this.modificarServidoresPublicos(item.id)">
+                      matTooltipPosition="left" (click)="this.modificarRuims(item.id!)">
                       <mat-icon>edit</mat-icon>
                     </a>
 
                     <a class="text-danger" mat-icon-button matTooltip="Dar de baja" matTooltipPosition="right"
-                      (click)="this.destroyServidorPublico(item.id,item.nombres,item.paterno,item.estado)">
+                      (click)="this.destroyRuim(item.id!,item.nro_id_mineria,item.sector,item.estado)">
                       <mat-icon>delete_outline</mat-icon>
                     </a>
                   </td>
@@ -102,100 +104,97 @@
   </div>
 </div>
 
-<!-- Modal crear usuarios -->
+<!-- Modal crear RUIMS -->
 <div class="card">
   <div class="card-body">
     <!-- sample modal content -->
     <div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" style="display: none;"
-      aria-hidden="true" id="myModal_crear_servidor">
+      aria-hidden="true" id="myModal_crear_ruim">
 
       <form #formDirective="ngForm" [formGroup]="this.formulario" class="ps-4 pt-4 pe-4 pb-0" (ngSubmit)="submit()">
         <div class="modal-dialog modal-xl">
           <div class="modal-content">
             <div class="modal-header bg-primary contenedor-header">
-              <h4 class="modal-title text-white text-uppercase" id="myLargeModalLabel">Formulario de registro de
-                servidores publicos</h4>
+              <h4 class="modal-title text-white text-uppercase" id="myLargeModalLabel">Formulario de registro para
+                mineros RUIM</h4>
               <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
             </div>
             <div class="modal-body">
-              <h4 class="mb-4">Registro de servidores publicos</h4>
+              <h4 class="mb-4">Registro unico de identificación minera</h4>
               <!-- Seccion 1 -->
               <div class="row">
-                <!-- Nombres -->
+                <!-- Nro. identificacion minera -->
                 <div class="col-12 col-lg-4">
-                  <p class="mb-0">Nombre completo:<span class="text-danger">*</span></p>
+                  <p class="mb-0">Nro. id. minera:<span class="text-danger">*</span></p>
                   <mat-form-field class="example-full-width" appearance="outline">
 
-                    <input type="text" matInput formControlName="nombres" autocomplete="off" spellcheck="false"
-                      placeholder="Ingrese nombre del servidor publico">
+                    <input type="text" matInput formControlName="nro_id_mineria" autocomplete="off" spellcheck="false"
+                      placeholder="Ingrese nro. de identificación minera">
 
                     <!-- Validacion -->
                     <!-- Preguntamos si es invalido y si esta sucio o a sido tocado -->
-                    <mat-hint *ngIf="this.nombres?.invalid && (this.nombres?.dirty || this.nombres?.touched)">
+                    <mat-hint
+                      *ngIf="this.nro_id_mineria?.invalid && (this.nro_id_mineria?.dirty || this.nro_id_mineria?.touched)">
                       <!-- Errores con expresiones regulares -->
-                      <div *ngIf="this.nombres?.hasError('required')" class="animated fadeIn fast text-danger" id="">
+                      <div *ngIf="this.nro_id_mineria?.hasError('required')" class="animated fadeIn fast text-danger"
+                        id="">
                         Este campo es requerido.
                       </div>
-                      <div *ngIf="this.nombres?.hasError('pattern')" class="animated fadeIn fast text-danger" id="">
+                      <div *ngIf="this.nro_id_mineria?.hasError('maxlength')" class="animated fadeIn fast text-danger"
+                        id="">
+                        Este campo solo acepta solo 20 letras.
+                      </div>
+                    </mat-hint>
+                  </mat-form-field>
+                </div>
+
+                <!-- Sector -->
+                <div class="col-12 col-lg-4">
+                  <p class="mb-0">Sector:<span class="text-danger">*</span></p>
+                  <mat-form-field class="example-full-width" appearance="outline">
+
+                    <input type="text" matInput formControlName="sector" autocomplete="off" spellcheck="false"
+                      placeholder="Ingrese la denominación de la empresa">
+
+                    <!-- Validacion -->
+                    <!-- Preguntamos si es invalido y si esta sucio o a sido tocado -->
+                    <!-- Validacion -->
+                    <!-- Preguntamos si es invalido y si esta sucio o a sido tocado -->
+                    <mat-hint *ngIf="this.sector?.invalid && (this.sector?.dirty || this.sector?.touched)">
+                      <!-- Errores con expresiones regulares -->
+                      <div *ngIf="this.sector?.hasError('required')" class="animated fadeIn fast text-danger" id="">
+                        Este campo es requerido.
+                      </div>
+                      <div *ngIf="this.sector?.hasError('pattern')" class="animated fadeIn fast text-danger" id="">
                         Este campo solo acepta letras.
                       </div>
-                      <div *ngIf="this.nombres?.hasError('maxlength')" class="animated fadeIn fast text-danger" id="">
+                      <div *ngIf="this.sector?.hasError('maxlength')" class="animated fadeIn fast text-danger" id="">
                         Este campo solo acepta solo 50 letras.
                       </div>
                     </mat-hint>
                   </mat-form-field>
                 </div>
 
-                <!-- Paterno -->
+
+                <!-- Actividad -->
                 <div class="col-12 col-lg-4">
-                  <p class="mb-0">Apellido paterno:<span class="text-danger">*</span></p>
+                  <p class="mb-0">Actividad:<span class="text-danger">*</span></p>
                   <mat-form-field class="example-full-width" appearance="outline">
 
-                    <input type="text" matInput formControlName="paterno" autocomplete="off" spellcheck="false"
-                      placeholder="Ingrese el apellido paterno del servidor publico">
+                    <input type="text" matInput formControlName="actividad" autocomplete="off" spellcheck="false"
+                      placeholder="Ingrese la actividad de la empresa">
 
                     <!-- Validacion -->
                     <!-- Preguntamos si es invalido y si esta sucio o a sido tocado -->
                     <!-- Validacion -->
                     <!-- Preguntamos si es invalido y si esta sucio o a sido tocado -->
-                    <mat-hint *ngIf="this.paterno?.invalid && (this.paterno?.dirty || this.paterno?.touched)">
+                    <mat-hint *ngIf="this.actividad?.invalid && (this.actividad?.dirty || this.actividad?.touched)">
                       <!-- Errores con expresiones regulares -->
-                      <div *ngIf="this.paterno?.hasError('required')" class="animated fadeIn fast text-danger" id="">
+                      <div *ngIf="this.actividad?.hasError('required')" class="animated fadeIn fast text-danger" id="">
                         Este campo es requerido.
                       </div>
-                      <div *ngIf="this.paterno?.hasError('pattern')" class="animated fadeIn fast text-danger" id="">
-                        Este campo solo acepta letras.
-                      </div>
-                      <div *ngIf="this.paterno?.hasError('maxlength')" class="animated fadeIn fast text-danger" id="">
-                        Este campo solo acepta solo 50 letras.
-                      </div>
-                    </mat-hint>
-                  </mat-form-field>
-                </div>
-
-
-                <!-- Materno -->
-                <div class="col-12 col-lg-4">
-                  <p class="mb-0">Apellido materno:<span class="text-danger">*</span></p>
-                  <mat-form-field class="example-full-width" appearance="outline">
-
-                    <input type="text" matInput formControlName="materno" autocomplete="off" spellcheck="false"
-                      placeholder="Ingrese el apellido materno del servidor publico">
-
-                    <!-- Validacion -->
-                    <!-- Preguntamos si es invalido y si esta sucio o a sido tocado -->
-                    <!-- Validacion -->
-                    <!-- Preguntamos si es invalido y si esta sucio o a sido tocado -->
-                    <mat-hint *ngIf="this.materno?.invalid && (this.materno?.dirty || this.materno?.touched)">
-                      <!-- Errores con expresiones regulares -->
-                      <div *ngIf="this.materno?.hasError('required')" class="animated fadeIn fast text-danger" id="">
-                        Este campo es requerido.
-                      </div>
-                      <div *ngIf="this.materno?.hasError('pattern')" class="animated fadeIn fast text-danger" id="">
-                        Este campo solo acepta letras.
-                      </div>
-                      <div *ngIf="this.materno?.hasError('maxlength')" class="animated fadeIn fast text-danger" id="">
-                        Este campo solo acepta solo 50 letras.
+                      <div *ngIf="this.actividad?.hasError('maxlength')" class="animated fadeIn fast text-danger" id="">
+                        Este campo solo acepta solo 70 letras.
                       </div>
                     </mat-hint>
                   </mat-form-field>
@@ -203,77 +202,67 @@
               </div>
               <!-- Seccion 2 -->
               <div class="row">
-                <!-- Carnet -->
+                <!-- Representante legal -->
                 <div class="col-12 col-lg-4">
-                  <p class="mb-0">Carnet:<span class="text-danger">*</span></p>
+                  <p class="mb-0">Representante legal:<span class="text-danger">*</span></p>
                   <mat-form-field class="example-full-width" appearance="outline">
 
-                    <input type="text" matInput formControlName="carnet" autocomplete="off" spellcheck="false"
-                      placeholder="Ingrese carnet de indentidad">
+                    <input type="text" matInput formControlName="rep_legal" autocomplete="off" spellcheck="false"
+                      placeholder="Ingrese un rep. legal">
 
                     <!-- Validacion -->
                     <!-- Preguntamos si es invalido y si esta sucio o a sido tocado -->
-                    <mat-hint *ngIf="this.carnet?.invalid && (this.carnet?.dirty || this.carnet?.touched)">
+                    <mat-hint *ngIf="this.rep_legal?.invalid && (this.rep_legal?.dirty || this.rep_legal?.touched)">
                       <!-- Errores con expresiones regulares -->
-                      <div *ngIf="this.carnet?.hasError('required')" class="animated fadeIn fast text-danger" id="">
+                      <div *ngIf="this.rep_legal?.hasError('required')" class="animated fadeIn fast text-danger" id="">
                         Este campo es requerido.
                       </div>
-                      <div *ngIf="this.carnet?.hasError('maxlength')" class="animated fadeIn fast text-danger" id="">
+                      <div *ngIf="this.rep_legal?.hasError('pattern')" class="animated fadeIn fast text-danger" id="">
+                        Este campo solo acepta letras.
+                      </div>
+                      <div *ngIf="this.rep_legal?.hasError('maxlength')" class="animated fadeIn fast text-danger" id="">
                         Este campo solo acepta solo 12 digitos.
                       </div>
                     </mat-hint>
                   </mat-form-field>
                 </div>
 
-                <!-- Telefono -->
+                <!-- Municipio -->
                 <div class="col-12 col-lg-4">
-                  <p class="mb-0">Telefono:<span class="text-danger">*</span></p>
+                  <p class="mb-0">Municipio:<span class="text-danger">*</span></p>
                   <mat-form-field class="example-full-width" appearance="outline">
 
-                    <input type="text" matInput formControlName="telefono" autocomplete="off" spellcheck="false"
-                      placeholder="Ingrese telefono del servidor publico">
+                    <input type="text" matInput formControlName="municipio" autocomplete="off" spellcheck="false"
+                      placeholder="Ingrese municipio">
 
                     <!-- Validacion -->
                     <!-- Preguntamos si es invalido y si esta sucio o a sido tocado -->
-                    <mat-hint *ngIf="this.telefono?.invalid && (this.telefono?.dirty || this.telefono?.touched)">
+                    <mat-hint *ngIf="this.municipio?.invalid && (this.municipio?.dirty || this.municipio?.touched)">
                       <!-- Errores con expresiones regulares -->
-                      <div *ngIf="this.telefono?.hasError('required')" class="animated fadeIn fast text-danger" id="">
+                      <div *ngIf="this.municipio?.hasError('required')" class="animated fadeIn fast text-danger" id="">
                         Este campo es requerido.
-                      </div>
-                      <div *ngIf="this.telefono?.hasError('pattern')" class="animated fadeIn fast text-danger" id="">
-                        Este campo solo acepta números.
-                      </div>
-
-                      <div *ngIf="this.telefono?.hasError('maxlength')" class="animated fadeIn fast text-danger" id="">
-                        Este campo solo acepta solo 10 digitos.
                       </div>
 
                     </mat-hint>
                   </mat-form-field>
                 </div>
 
-                <!-- Email -->
+                <!-- Fecha registro -->
                 <div class="col-12 col-lg-4">
-                  <p class="mb-0">Email:<span class="text-danger">*</span></p>
+                  <p class="mb-0">Fecha registro:<span class="text-danger">*</span></p>
                   <mat-form-field class="example-full-width" appearance="outline">
 
-                    <input type="text" matInput formControlName="email" autocomplete="off" spellcheck="false"
-                      placeholder="Ingrese el email del servidor publico">
+                    <input type="text" matInput formControlName="fecha_registro" autocomplete="off" spellcheck="false"
+                      placeholder="Ingrese fecha de registro">
 
                     <!-- Validacion -->
                     <!-- Preguntamos si es invalido y si esta sucio o a sido tocado -->
-                    <mat-hint *ngIf="this.email?.invalid && (this.email?.dirty || this.email?.touched)">
+                    <mat-hint
+                      *ngIf="this.fecha_registro?.invalid && (this.fecha_registro?.dirty || this.fecha_registro?.touched)">
                       <!-- Errores con expresiones regulares -->
-                      <div *ngIf="this.email?.hasError('required')" class="animated fadeIn fast text-danger" id="">
+                      <div *ngIf="this.fecha_registro?.hasError('required')" class="animated fadeIn fast text-danger"
+                        id="">
                         Este campo es requerido.
-                      </div>
-
-                      <div *ngIf="this.email?.hasError('email')" class="animated fadeIn fast text-danger" id="">
-                        Formato de correo electronico invalido.
-                      </div>
-
-                      <div *ngIf="this.email?.hasError('maxlength')" class="animated fadeIn fast text-danger" id="">
-                        Este campo solo acepta solo 50 letras.
                       </div>
 
                     </mat-hint>
@@ -283,27 +272,29 @@
 
               <!-- Seccion 3 -->
               <div class="row">
-                <!-- Dirección -->
-                <div class="col-12">
-                  <p class="mb-0">Dirección:<span class="text-danger">*</span></p>
+                <!-- Fecha expiración -->
+                <div class="col-12 col-lg-4">
+                  <p class="mb-0">Fecha expiración:<span class="text-danger">*</span></p>
                   <mat-form-field class="example-full-width" appearance="outline">
 
-                    <input type="text" matInput formControlName="direccion" autocomplete="off" spellcheck="false"
-                      placeholder="Ingrese la direccion del servidor publico">
+                    <input type="text" matInput formControlName="fecha_expiracion" autocomplete="off" spellcheck="false"
+                      placeholder="Ingrese fecha de expiración">
 
                     <!-- Validacion -->
                     <!-- Preguntamos si es invalido y si esta sucio o a sido tocado -->
-                    <mat-hint *ngIf="this.direccion?.invalid && (this.direccion?.dirty || this.direccion?.touched)">
+                    <mat-hint
+                      *ngIf="this.fecha_expiracion?.invalid && (this.fecha_expiracion?.dirty || this.fecha_expiracion?.touched)">
                       <!-- Errores con expresiones regulares -->
-                      <div *ngIf="this.direccion?.hasError('required')" class="animated fadeIn fast text-danger" id="">
+                      <div *ngIf="this.fecha_expiracion?.hasError('required')" class="animated fadeIn fast text-danger"
+                        id="">
                         Este campo es requerido.
                       </div>
 
                     </mat-hint>
                   </mat-form-field>
                 </div>
-
               </div>
+
               <p class="text-right mt-3">Los campos con ( <span class="text-danger">*</span> ) son obligatorios</p>
             </div>
             <div class="modal-footer">
@@ -332,12 +323,12 @@
 </div>
 <!-- Fin Modal crear usuarios -->
 
-<!-- Modal editar usuarios -->
+<!-- Modal editar RUIMS -->
 <div class="card">
   <div class="card-body">
     <!-- sample modal content -->
     <div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" style="display: none;"
-      aria-hidden="true" id="myModal_editar_servidor">
+      aria-hidden="true" id="myModal_editar_ruims">
       <form #formDirective="ngForm" [formGroup]="this.formularioModificar" class="ps-4 pt-4 pe-4 pb-0"
         (ngSubmit)="submitModificar()">
         <div class="modal-dialog modal-xl">
@@ -351,78 +342,79 @@
               <h4 class="mb-4">Modificar datos</h4>
               <!-- Seccion 1 -->
               <div class="row">
-                <!-- Nombres -->
+                <!-- Nro. identificacion minera -->
                 <div class="col-12 col-lg-4">
-                  <p class="mb-0">Nombre completo:<span class="text-danger">*</span></p>
+                  <p class="mb-0">Nro. id. minera:<span class="text-danger">*</span></p>
                   <mat-form-field class="example-full-width" appearance="outline">
 
-                    <input type="text" matInput formControlName="nombresM" autocomplete="off" spellcheck="false"
-                      placeholder="Ingrese nombre del servidor publico">
+                    <input type="text" matInput formControlName="nro_id_mineriaM" autocomplete="off" spellcheck="false"
+                      placeholder="Ingrese nro. de identificación minera">
 
                     <!-- Validacion -->
                     <!-- Preguntamos si es invalido y si esta sucio o a sido tocado -->
-                    <mat-hint *ngIf="this.nombresM?.invalid && (this.nombresM?.dirty || this.nombresM?.touched)">
+                    <mat-hint
+                      *ngIf="this.nro_id_mineriaM?.invalid && (this.nro_id_mineriaM?.dirty || this.nro_id_mineriaM?.touched)">
                       <!-- Errores con expresiones regulares -->
-                      <div *ngIf="this.nombresM?.hasError('required')" class="animated fadeIn fast text-danger" id="">
+                      <div *ngIf="this.nro_id_mineriaM?.hasError('required')" class="animated fadeIn fast text-danger"
+                        id="">
                         Este campo es requerido.
                       </div>
-                      <div *ngIf="this.nombresM?.hasError('pattern')" class="animated fadeIn fast text-danger" id="">
+                      <div *ngIf="this.nro_id_mineriaM?.hasError('maxlength')" class="animated fadeIn fast text-danger"
+                        id="">
+                        Este campo solo acepta solo 20 letras.
+                      </div>
+                    </mat-hint>
+                  </mat-form-field>
+                </div>
+
+                <!-- Sector -->
+                <div class="col-12 col-lg-4">
+                  <p class="mb-0">Sector:<span class="text-danger">*</span></p>
+                  <mat-form-field class="example-full-width" appearance="outline">
+
+                    <input type="text" matInput formControlName="sectorM" autocomplete="off" spellcheck="false"
+                      placeholder="Ingrese la denominación de la empresa">
+
+                    <!-- Validacion -->
+                    <!-- Preguntamos si es invalido y si esta sucio o a sido tocado -->
+                    <!-- Validacion -->
+                    <!-- Preguntamos si es invalido y si esta sucio o a sido tocado -->
+                    <mat-hint *ngIf="this.sectorM?.invalid && (this.sectorM?.dirty || this.sectorM?.touched)">
+                      <!-- Errores con expresiones regulares -->
+                      <div *ngIf="this.sectorM?.hasError('required')" class="animated fadeIn fast text-danger" id="">
+                        Este campo es requerido.
+                      </div>
+                      <div *ngIf="this.sectorM?.hasError('pattern')" class="animated fadeIn fast text-danger" id="">
                         Este campo solo acepta letras.
                       </div>
-                      <div *ngIf="this.nombresM?.hasError('maxlength')" class="animated fadeIn fast text-danger" id="">
+                      <div *ngIf="this.sectorM?.hasError('maxlength')" class="animated fadeIn fast text-danger" id="">
                         Este campo solo acepta solo 50 letras.
                       </div>
                     </mat-hint>
                   </mat-form-field>
                 </div>
 
-                <!-- Paterno -->
+
+                <!-- Actividad -->
                 <div class="col-12 col-lg-4">
-                  <p class="mb-0">Apellido paterno:<span class="text-danger">*</span></p>
+                  <p class="mb-0">Actividad:<span class="text-danger">*</span></p>
                   <mat-form-field class="example-full-width" appearance="outline">
 
-                    <input type="text" matInput formControlName="paternoM" autocomplete="off" spellcheck="false"
-                      placeholder="Ingrese el apellido paterno">
+                    <input type="text" matInput formControlName="actividadM" autocomplete="off" spellcheck="false"
+                      placeholder="Ingrese la actividad de la empresa">
 
                     <!-- Validacion -->
                     <!-- Preguntamos si es invalido y si esta sucio o a sido tocado -->
                     <!-- Validacion -->
                     <!-- Preguntamos si es invalido y si esta sucio o a sido tocado -->
-                    <mat-hint *ngIf="this.paternoM?.invalid && (this.paternoM?.dirty || this.paternoM?.touched)">
+                    <mat-hint *ngIf="this.actividadM?.invalid && (this.actividadM?.dirty || this.actividadM?.touched)">
                       <!-- Errores con expresiones regulares -->
-                      <div *ngIf="this.paternoM?.hasError('required')" class="animated fadeIn fast text-danger" id="">
+                      <div *ngIf="this.actividadM?.hasError('required')" class="animated fadeIn fast text-danger" id="">
                         Este campo es requerido.
                       </div>
-                      <div *ngIf="this.paternoM?.hasError('pattern')" class="animated fadeIn fast text-danger" id="">
-                        Este campo solo acepta letras.
-                      </div>
-                      <div *ngIf="this.paternoM?.hasError('maxlength')" class="animated fadeIn fast text-danger" id="">
-                        Este campo solo acepta solo 50 letras.
-                      </div>
-                    </mat-hint>
-                  </mat-form-field>
-                </div>
-
-
-                <!-- Materno -->
-                <div class="col-12 col-lg-4">
-                  <p class="mb-0">Apellido materno:<span class="text-danger">*</span></p>
-                  <mat-form-field class="example-full-width" appearance="outline">
-
-                    <input type="text" matInput formControlName="maternoM" autocomplete="off" spellcheck="false"
-                      placeholder="Ingrese el apellido materno">
-
-                    <!-- Validacion -->
-                    <mat-hint *ngIf="this.maternoM?.invalid && (this.maternoM?.dirty || this.maternoM?.touched)">
-                      <!-- Errores con expresiones regulares -->
-                      <div *ngIf="this.maternoM?.hasError('required')" class="animated fadeIn fast text-danger" id="">
-                        Este campo es requerido.
-                      </div>
-                      <div *ngIf="this.maternoM?.hasError('pattern')" class="animated fadeIn fast text-danger" id="">
-                        Este campo solo acepta letras.
-                      </div>
-                      <div *ngIf="this.maternoM?.hasError('maxlength')" class="animated fadeIn fast text-danger" id="">
-                        Este campo solo acepta solo 50 letras.
+                      <div *ngIf="this.actividadM?.hasError('maxlength')" class="animated fadeIn fast text-danger"
+                        id="">
+                        Este campo solo acepta solo 70 letras.
                       </div>
                     </mat-hint>
                   </mat-form-field>
@@ -430,77 +422,68 @@
               </div>
               <!-- Seccion 2 -->
               <div class="row">
-                <!-- Carnet -->
+                <!-- Representante legal -->
                 <div class="col-12 col-lg-4">
-                  <p class="mb-0">Carnet:<span class="text-danger">*</span></p>
+                  <p class="mb-0">Representante legal:<span class="text-danger">*</span></p>
                   <mat-form-field class="example-full-width" appearance="outline">
 
-                    <input type="text" matInput formControlName="carnetM" autocomplete="off" spellcheck="false"
-                      placeholder="Ingrese carnet de indentidad">
+                    <input type="text" matInput formControlName="rep_legalM" autocomplete="off" spellcheck="false"
+                      placeholder="Ingrese un rep. legal">
 
                     <!-- Validacion -->
                     <!-- Preguntamos si es invalido y si esta sucio o a sido tocado -->
-                    <mat-hint *ngIf="this.carnetM?.invalid && (this.carnetM?.dirty || this.carnetM?.touched)">
+                    <mat-hint *ngIf="this.rep_legalM?.invalid && (this.rep_legalM?.dirty || this.rep_legalM?.touched)">
                       <!-- Errores con expresiones regulares -->
-                      <div *ngIf="this.carnetM?.hasError('required')" class="animated fadeIn fast text-danger" id="">
+                      <div *ngIf="this.rep_legalM?.hasError('required')" class="animated fadeIn fast text-danger" id="">
                         Este campo es requerido.
                       </div>
-                      <div *ngIf="this.carnetM?.hasError('maxlength')" class="animated fadeIn fast text-danger" id="">
+                      <div *ngIf="this.rep_legalM?.hasError('pattern')" class="animated fadeIn fast text-danger" id="">
+                        Este campo solo acepta letras.
+                      </div>
+                      <div *ngIf="this.rep_legalM?.hasError('maxlength')" class="animated fadeIn fast text-danger"
+                        id="">
                         Este campo solo acepta solo 12 digitos.
                       </div>
                     </mat-hint>
                   </mat-form-field>
                 </div>
 
-                <!-- Telefono -->
+                <!-- Municipio -->
                 <div class="col-12 col-lg-4">
-                  <p class="mb-0">Telefono:<span class="text-danger">*</span></p>
+                  <p class="mb-0">Municipio:<span class="text-danger">*</span></p>
                   <mat-form-field class="example-full-width" appearance="outline">
 
-                    <input type="text" matInput formControlName="telefonoM" autocomplete="off" spellcheck="false"
-                      placeholder="Ingrese telefono del servidor publico">
+                    <input type="text" matInput formControlName="municipioM" autocomplete="off" spellcheck="false"
+                      placeholder="Ingrese municipio">
 
                     <!-- Validacion -->
                     <!-- Preguntamos si es invalido y si esta sucio o a sido tocado -->
-                    <mat-hint *ngIf="this.telefonoM?.invalid && (this.telefonoM?.dirty || this.telefonoM?.touched)">
+                    <mat-hint *ngIf="this.municipioM?.invalid && (this.municipioM?.dirty || this.municipioM?.touched)">
                       <!-- Errores con expresiones regulares -->
-                      <div *ngIf="this.telefonoM?.hasError('required')" class="animated fadeIn fast text-danger" id="">
+                      <div *ngIf="this.municipioM?.hasError('required')" class="animated fadeIn fast text-danger" id="">
                         Este campo es requerido.
-                      </div>
-                      <div *ngIf="this.telefonoM?.hasError('pattern')" class="animated fadeIn fast text-danger" id="">
-                        Este campo solo acepta números.
-                      </div>
-
-                      <div *ngIf="this.telefonoM?.hasError('maxlength')" class="animated fadeIn fast text-danger" id="">
-                        Este campo solo acepta solo 10 digitos.
                       </div>
 
                     </mat-hint>
                   </mat-form-field>
                 </div>
 
-                <!-- Email -->
+                <!-- Fecha registro -->
                 <div class="col-12 col-lg-4">
-                  <p class="mb-0">Email:<span class="text-danger">*</span></p>
+                  <p class="mb-0">Fecha registro:<span class="text-danger">*</span></p>
                   <mat-form-field class="example-full-width" appearance="outline">
 
-                    <input type="text" matInput formControlName="emailM" autocomplete="off" spellcheck="false"
-                      placeholder="Ingrese el email del servidor publico">
+                    <input type="text" matInput formControlName="fecha_registroM" autocomplete="off" spellcheck="false"
+                      placeholder="Ingrese fecha de registro">
 
                     <!-- Validacion -->
                     <!-- Preguntamos si es invalido y si esta sucio o a sido tocado -->
-                    <mat-hint *ngIf="this.emailM?.invalid && (this.emailM?.dirty || this.emailM?.touched)">
+                    <mat-hint
+                      *ngIf="this.fecha_registroM?.invalid && (this.fecha_registroM?.dirty || this.fecha_registroM?.touched)">
                       <!-- Errores con expresiones regulares -->
-                      <div *ngIf="this.emailM?.hasError('required')" class="animated fadeIn fast text-danger" id="">
+                      <div *ngIf="this.fecha_registroM?.hasError('required')" class="animated fadeIn fast text-danger"
+                        id="">
                         Este campo es requerido.
-                      </div>
-
-                      <div *ngIf="this.emailM?.hasError('email')" class="animated fadeIn fast text-danger" id="">
-                        Formato de correo electronico invalido.
-                      </div>
-
-                      <div *ngIf="this.emailM?.hasError('maxlength')" class="animated fadeIn fast text-danger" id="">
-                        Este campo solo acepta solo 50 letras.
                       </div>
 
                     </mat-hint>
@@ -510,19 +493,22 @@
 
               <!-- Seccion 3 -->
               <div class="row">
-                <!-- Dirección -->
-                <div class="col-12 col-md-8">
-                  <p class="mb-0">Dirección:<span class="text-danger">*</span></p>
+                <!-- Fecha de expiración -->
+                <!-- Fecha expiración -->
+                <div class="col-12 col-lg-4">
+                  <p class="mb-0">Fecha expiración:<span class="text-danger">*</span></p>
                   <mat-form-field class="example-full-width" appearance="outline">
 
-                    <input type="text" matInput formControlName="direccionM" autocomplete="off" spellcheck="false"
-                      placeholder="Ingrese la direccion del servidor publico">
+                    <input type="text" matInput formControlName="fecha_expiracionM" autocomplete="off"
+                      spellcheck="false" placeholder="Ingrese fecha de expiración">
 
                     <!-- Validacion -->
                     <!-- Preguntamos si es invalido y si esta sucio o a sido tocado -->
-                    <mat-hint *ngIf="this.direccionM?.invalid && (this.direccionM?.dirty || this.direccionM?.touched)">
+                    <mat-hint
+                      *ngIf="this.fecha_expiracionM?.invalid && (this.fecha_expiracionM?.dirty || this.fecha_expiracionM?.touched)">
                       <!-- Errores con expresiones regulares -->
-                      <div *ngIf="this.direccionM?.hasError('required')" class="animated fadeIn fast text-danger" id="">
+                      <div *ngIf="this.fecha_expiracionM?.hasError('required')" class="animated fadeIn fast text-danger"
+                        id="">
                         Este campo es requerido.
                       </div>
 
@@ -552,6 +538,7 @@
                 </div>
 
               </div>
+
               <p class="text-right mt-3">Los campos con ( <span class="text-danger">*</span> ) son obligatorios</p>
             </div>
             <div class="modal-footer">

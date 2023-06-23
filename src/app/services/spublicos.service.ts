@@ -1,16 +1,12 @@
 import { Injectable } from '@angular/core';
 
 // Para manejar las peticiones http// 
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 
-// El tap un efecto secuendario
-import { tap, map, catchError } from "rxjs/operators";
-import { Observable, of, Subject } from 'rxjs';
 
 // Variables globales
 import { environment } from './../../environments/environment';
 
-import { Router } from '@angular/router';
 
 export interface ListaServidores {
   codigo: number;
@@ -36,68 +32,88 @@ const base_url = environment.base_url;
 export class SpublicosService {
 
   constructor(
-    private http: HttpClient,
-    private router: Router,
+    private http: HttpClient
   ) { }
-
-  // Token de usuario
-  get token() {
-    let tokenActual: any;
-    const infoToken = localStorage.getItem('token');
-    if (infoToken) {
-      const { token } = JSON.parse(infoToken);
-      tokenActual = token;
-    }
-    return tokenActual;
-  }
 
   /**
  * Store servidores publicos 
  */
   public storeServidoresPublicos(reuniones: any) {
-    let parameters = new HttpHeaders();
-    parameters = parameters.set('token-usuario', this.token);
-    return this.http.post<any>(base_url + '/api/servidores', reuniones, { headers: parameters });
+
+    /*
+       Antes sin interceptores
+        let headers = new HttpHeaders();
+        headers = headers.set('token-usuario', this.token);
+        const options = { headers: headers };
+        return this.http.post<any>(base_url + '/api/servidores', reuniones, options);
+    */
+
+    // Ahora con interceptores
+    return this.http.post<any>(base_url + '/api/servidores', reuniones);
+
   }
 
   /**
 * Store servidores publicos 
 */
-  public indexServidoresPublicos() {
-    let parameters = new HttpHeaders();
-    parameters = parameters.set('token-usuario', this.token);
-    return this.http.get<any>(base_url + '/api/servidores', { headers: parameters });
+  public indexServidoresPublicos(page: number) {
+
+    // Manda parametros por params(URL) -  https://reqres.in/api/user?page=2
+    let params = new HttpParams()
+    params = params.set('page', page.toString())
+
+    const options = { params: params };
+
+    return this.http.get<any>(base_url + `/api/servidores`, options);
   }
 
   /**
  * ShowReuniones
  */
   public showServidoresPublicos(id: number) {
-    let parameters = new HttpHeaders();
-    parameters = parameters.set('token-usuario', this.token);
-    return this.http.get<any>(base_url + `/api/servidores/${id}`, { headers: parameters });
+
+    return this.http.get<any>(base_url + `/api/servidores/${id}`);
   }
 
   /**
    * updateServidores
    */
   public updateServidores(updateDatos: any, id: number) {
-    console.log(updateDatos);
 
-    let parameters = new HttpHeaders();
-    parameters = parameters.set('token-usuario', this.token);
-    return this.http.put<any>(base_url + `/api/servidores/${id}`, updateDatos, { headers: parameters });
+    return this.http.put<any>(base_url + `/api/servidores/${id}`, updateDatos);
+
   }
-
 
   /**
    * eliminar Servidor
    */
   public destroyServidorPublico(id: number) {
-    let parameters = new HttpHeaders();
-    parameters = parameters.set('token-usuario', this.token);
-    return this.http.delete<any>(base_url + '/api/servidores/' + id, { headers: parameters });
+
+    return this.http.delete<any>(base_url + '/api/servidores/' + id);
+
   }
 
+  /**
+   * Buscar servidores publicos
+   */
+  public searchServidoresPublicos(servidor: any) {
+
+    return this.http.post<any>(base_url + '/api/servidores/buscarservidores', servidor);
+
+  }
+
+  /**
+   * paginateServidores
+   */
+  public paginateServidores(formData: any) {
+
+    // Manda parametros por params(URL) -  https://reqres.in/api/user?page=2
+    let params = new HttpParams()
+    params = params.set('page', (formData.page).toString())
+
+    const options = { params: params };
+
+    return this.http.get<any>(base_url + '/api/servidores', options);
+  }
 
 }

@@ -4,6 +4,7 @@ import { RouterModule, Routes } from '@angular/router';
 // Rutas hijas
 import { AuthRoutingModule } from './auth/auth-routing.module';
 import { PagesRoutingModule } from './pages/pages-routing.module';
+import { ComponentsRoutingModule } from './components/components-routing.module';
 
 // Componentes de APP
 import { NopagesfoundComponent } from './nopagesfound/nopagesfound.component';
@@ -16,6 +17,7 @@ const routes: Routes = [
 
   // Cualquiera otra ruta que no este definida en este routing va a mostrar NoPagesFound
   { path: '**', component: NopagesfoundComponent },
+
 ];
 
 
@@ -23,7 +25,8 @@ const routes: Routes = [
   imports: [
     RouterModule.forRoot(routes),
     AuthRoutingModule,
-    PagesRoutingModule
+    PagesRoutingModule,
+    ComponentsRoutingModule
   ],
   exports: [RouterModule]
 })

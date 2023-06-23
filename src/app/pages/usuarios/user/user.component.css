@@ -15,3 +15,17 @@
 }
 
 /* Fin Angular material*/
+
+.table-header {
+  background: linear-gradient(90deg, #1b232b 0%, #1f2831 35%, #2f3d4a 100%);
+}
+
+.table-header__encabezado th {
+  font-size: 12px !important;
+  color: #FFFFFF;
+  padding: 15px;
+}
+
+.table-cuerpo__datos {
+  font-size: 14px !important;
+}

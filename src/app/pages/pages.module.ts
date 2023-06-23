@@ -11,12 +11,16 @@ import { SharedModule } from '../shared/shared.module';
 // Modulo material
 import { MaterialModule } from '../material/material.module';
 
+// Paginación
+import { NgxPaginationModule } from 'ngx-pagination';
+
 // Componentes de Pages
 import { PagesComponent } from './pages.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { PerfilComponent } from './usuarios/perfil/perfil.component';
 import { UserComponent } from './usuarios/user/user.component';
 import { ServidoresPublicosComponent } from './usuarios/servidores-publicos/servidores-publicos.component';
+import { RuimComponent } from './usuarios/ruim/ruim.component';
 
 // Ng bootstrap para inicializar un modal
 // import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
@@ -28,6 +32,7 @@ import { ServidoresPublicosComponent } from './usuarios/servidores-publicos/serv
     PerfilComponent,
     UserComponent,
     ServidoresPublicosComponent,
+    RuimComponent,
   ],
   imports: [
     CommonModule,
@@ -36,6 +41,7 @@ import { ServidoresPublicosComponent } from './usuarios/servidores-publicos/serv
     MaterialModule,
     FormsModule,
     ReactiveFormsModule,
+    NgxPaginationModule
 
   ],
   exports: [
@@ -43,7 +49,8 @@ import { ServidoresPublicosComponent } from './usuarios/servidores-publicos/serv
     DashboardComponent,
     PerfilComponent,
     UserComponent,
-    ServidoresPublicosComponent
+    ServidoresPublicosComponent,
+    RuimComponent
   ]
 })
 export class PagesModule { }
